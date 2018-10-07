@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>PROWiSe Help - The Windows view</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<script language="JavaScript">
+function SwHdPopup(popupId){
+ if(popupId.style.display=="block")popupId.style.display="none";
+ else popupId.style.display="block";
+}
+</script>
+<H2>The Windows view<hr></H2>
+<P>On the <B>Windows</B> tab you can monitor windows and applications running.</P>
+<UL style="margin-left:20px">
+<LI><B>Handle</b></LI><br>
+The handle of a window (hex value).
+<br><br>
+<LI><B>Caption</b></LI><br>
+Text of the specified window's title bar.
+<br><br>
+<LI><B>Class Name</b></LI><br>
+The name of the class to which the specified window belongs.
+<br><br>
+<LI><B>Rectnagle</b></LI><br>
+The dimensions of the bounding rectangle of the specified window in the following form:<br>
+&nbsp;&nbsp;<em><i>(Left,Up,Right,Bottom) Width x Height</i></em><br>
+&nbsp;&nbsp;Left,Up - coordinates of the upper-left corner.<br>
+&nbsp;&nbsp;Right,Bottom - coordinates of the lower-right corner.<br>
+The coordinates are relative to the upper-left corner of the screen.
+<br><br>
+<LI><B>Style</b></LI><br>
+The window-class style bits.
+<br><br>
+<LI><B>Extended Style</b></LI><br>
+The extended style of the window.
+<br><br>
+<LI><B>Status</b></LI><br>
+Determines whether the Microsoft Windows considers that a specified application is not responding, or "hung". An application is considered to be not responding if it is not waiting for input and is not in startup processing.<br>
+The value can be one of the following:&nbsp;<em><i>Running</i></em>, <em><i>Not Responding</i></em>.
+<br><br>
+</UL>
+</body></html>

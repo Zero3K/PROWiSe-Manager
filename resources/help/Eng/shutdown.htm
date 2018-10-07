@@ -1,0 +1,55 @@
+<html>
+<head>
+<title>PROWiSe Help - System Shutdown</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<script language="JavaScript">
+function SwHdPopup(popupId){
+ if(popupId.style.display=="block")popupId.style.display="none";
+ else popupId.style.display="block";
+}
+</script>
+<H2>System Shutdown<hr></H2>
+<UL style="margin-left:20px">
+<LI><B>Lock</b></LI><br>
+Locks the workstation's display, protecting it from unauthorized use while your programs and files remain open, and lets another user log on.<br>
+You can also lock workstation by pressing the <em>Windows logo</em> key + <em>L</em>.
+<br><br>
+<LI><B>Log Off</b></LI><br>
+Closes your programs and ends your Windows session.
+<br><br>
+<LI><B>Hibernate</b></LI><br>
+Saves your session to disk so that you can safely turn off power. Your session is restored the next time you start Windows.
+<br><br>
+<LI><B>Restart</b></LI><br>
+Shuts down Windows and then starts Windows again.
+<br><br>
+<LI><B>Turn Off</b></LI><br>
+Ends your session and shuts down Windows so that you can safely turn off power.
+<br><br>
+<LI><B>Stand By</b></LI><br>
+Puts your computer in a low-power state so that you can quickly resume your Windows session.
+<br><br>
+</UL>
+If the operation is unavailable, a corresponding button is grayed.
+<br><br>
+<hr>
+The following parameters are used at a log-off, reboot and turn off.
+<UL style="margin-left:20px">
+<LI><B>Normal Windows Exit</b></LI><br>
+The shutdown goes as through the Start button. The system forces hung applications to close.
+<br><br>
+<LI><B>Forced Windows Exit</b></LI><br>
+The system forces applications to close. Note that all unsaved data will be lost!
+<br><br>
+<LI><B>Turbo Windows Exit</b></LI><br>
+PROWiSe Manager calls NtShutdownSystem function. The system shuts down within 5 seconds. All unsaved data will be lost!<br>
+Use only in an emergency.
+<br><br>
+<LI><B>Use Power-Off Feature</b> <i>(at turn off)</i></LI><br>
+Select this item if your system supports the power-off feature.
+<br><br>
+</UL>
+</body></html>

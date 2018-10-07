@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>PROWiSe Help - Performance</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<script language="JavaScript">
+function SwHdPopup(popupId){
+ if(popupId.style.display=="block")popupId.style.display="none";
+ else popupId.style.display="block";
+}
+</script>
+<H2>Performance Information<hr></H2>
+<P>The <B>Performance</B> tab displays a dynamic overview of your computer's performance.</P>
+<UL style="margin-left:20px">
+<LI><B>CPU Usage</b></LI><br>
+A graph indicating the percentage of time the processor is working. This counter is a primary indicator of processor activity. View this graph to see how much processing time you are using.
+If this graph displays a high percentage, it means that one or more processes are use many cpu time. In this case your computer may running slowly.
+<br><br>
+<LI><B>CPU Usage History</b></LI><br>
+A graph showing how busy the CPU has been over time.
+The sampling displayed in the graph depends on the value you select for the <i>Update Speed</i> on the <i>View</i> menu.
+<br><br>
+<LI><B>Memory Usage</b></LI><br>
+<UL style="margin-left:20px;">
+ <LI><B>Commit</b></LI><br>
+ A graph showing commit charge. When committed virtual memory, reaches the system Commit Limit, applications and the system become unstable. The <b>Commit Limit</b> is the sum of most of physical memory and the sizes of any paging files.
+ <LI><B>RAM Usage</b></LI><br>
+ A graph showing physical memory usage.
+</ul><br>
+<LI><B>Totals for the number of <a onclick="SwHdPopup(handlePopup)" href="#ShowPopupTip">handles</a>, <a onclick="SwHdPopup(threadPopup)" href="#ShowPopupTip">threads</a> и <a onclick="SwHdPopup(processPopup)" href="#ShowPopupTip">processes</a>, running on the computer.</b></LI>
+<br>
+<span class="PopupText" id="handlePopup">* Handle - a value used to uniquely identify a resource, such as a file or registry key, so that a program can access it.</span>
+<span class="PopupText" id="threadPopup">* Thread - an object within a process that runs program instructions. Threads allow concurrent operations within a process and enable one process to run different parts of its program on different processors simultaneously.</span>
+<span class="PopupText" id="processPopup">* Process - an executable program, such as Windows Explorer, or a service.</span>
+<br>
+<LI><B><a onclick="SwHdPopup(ramPopup)" href="#ShowPopupTip">Physical Memory</a> (Kb).</b></LI><br>
+<span class="PopupText" id="ramPopup">* Physical Memory (also called RAM) - memory installed on your computer. Information stored in RAM is lost when the computer is turned off.</span>
+<B>Available</b> represents the amount of free memory that is available for use.<br>
+The <B>System Cache</b> shows the current physical memory used to map pages of open files.<br>
+<br>
+<LI><B><a onclick="SwHdPopup(kernmemPopup)" href="#ShowPopupTip">Kernel Memory</a> (Kb).</b></LI><br>
+<span class="PopupText" id="kernmemPopup">* Kernel Memory - memory used by the operating system kernel and device drivers.</span>
+<B>Paged</b> is memory that can be copied to the paging file, thereby freeing the physical memory. The physical memory can then be used by the operating system.<br>
+<B>Nonpaged</b> is memory that remains resident in physical memory and will not be copied out to the paging file.
+<br><br>
+<LI><B>Commit Charge (Kb).</b></LI><br>
+Memory allocated to programs and the operating system. Because of memory copied to the paging file, called virtual memory, the value listed under <b>Peak</b> may exceed the maximum physical memory.
+<br><br>
+<LI><B>Memory page size and allocation granularity (Kb).</b></LI><br>
+Allocation granularity specifies the granularity with which virtual memory is allocated.
+<br><br>
+<LI><B>Paging information.</b></LI><br>
+<LI><B>Context Switch Delta and I/O.</b></LI><br>
+</UL>
+</body></html>

@@ -1,0 +1,7 @@
+LIBRARY ModernMenu
+EXPORTS SetMenuStyle
+EXPORTS DrawMenuProc
+EXPORTS ImgListLoad
+EXPORTS ImgGetIcon
+EXPORTS ImgFreeAll
+EXPORTS AddLeftBorder

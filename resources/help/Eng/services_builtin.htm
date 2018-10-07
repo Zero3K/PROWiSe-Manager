@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>PROWiSe Help - Predefined accounts</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<H2>Predefined accounts<hr></H2>
+<b style="color:#000090;">LocalSystem<br></b>
+<div style="margin-left:20px">
+The LocalSystem account is a predefined local account. This account is not recognized by the security subsystem. It has extensive privileges on the local computer, and acts as the computer on the network. Its token includes the <em>NT AUTHORITY\SYSTEM</em> and <em>BUILTIN\Administrators</em> security identifiers; these accounts have access to most system objects. The name of the account in all locales is ".\LocalSystem". The name, "LocalSystem" or "<i>ComputerName</i>\LocalSystem" can also be used. This account does not have a password, so any password information is ignored.<br>
+<br>The account is not associated with any logged-on user account. This has several implications:<br>
+&nbsp;- The registry key <em>HKEY_CURRENT_USER</em> is associated with the default user, not the current user;<br>
+&nbsp;- The service can open the registry key <em>HKEY_LOCAL_MACHINE\SECURITY</em>;<br>
+&nbsp;- The service presents the computer's credentials to remote servers;<br>
+&nbsp;- If the service opens a command window and runs a batch file, the user could hit CTRL+C to terminate the batch file and gain access to a command window with LocalSystem permissions;<br>
+</div>
+<br><br>
+<b style="color:#000090;">LocalService<br></b>
+<div style="margin-left:20px">
+The LocalService account is a predefined local account. It has minimum privileges on the local computer and presents anonymous credentials on the network. The name of the account in all locales is <em>NT AUTHORITY\LocalService</em>. This account does not have a password, so any password information is ignored.<br>
+<br>The LocalService account has its own subkey under the <em>HKEY_USERS</em> registry key. Therefore, the <em>HKEY_CURRENT_USER</em> registry key is associated with the LocalService account.
+</div>
+<br><br>
+<b style="color:#000090;">NetworkService<br></b>
+<div style="margin-left:20px">
+The NetworkService account is a predefined local account. It has minimum privileges on the local computer and acts as the computer on the network. The name of the account in all locales is <em>NT AUTHORITY\NetworkService</em>. This account does not have a password, so any password information is ignored.<br>
+<br>A service that runs in the context of the NetworkService account presents the computer's credentials to remote servers. By default, the remote token contains security identifiers for the Everyone and Authenticated Users groups.
+<br><br>The NetworkService account has its own subkey under the <em>HKEY_USERS</em> registry key. Therefore, the <em>HKEY_CURRENT_USER</em> registry key is associated with the NetworkService account.
+</div>
+</body></html>

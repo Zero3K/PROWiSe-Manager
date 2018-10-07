@@ -1,0 +1,64 @@
+<html><head><title>PROWiSe Help - Service Properties: General</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<H2>Service Properties: General<hr></H2>
+<UL style="margin-left:20px">
+<LI><B>Service Name</b></LI><br>
+Used by Windows to identify the service.
+<br><br>
+<LI><B>Display Name</b></LI><br>
+Used by user interface programs to identify the service.
+<br><br>
+<LI><B>Service Type</b></LI><br>
+Type of the service.<br>
+&nbsp;&nbsp;<i>Own process</i><br>
+&nbsp;&nbsp;<i>Shared process</i><br>
+&nbsp;&nbsp;<i>File system driver</i><br>
+&nbsp;&nbsp;<i>Device driver</i><br>
+&nbsp;&nbsp;<i>Interactive</i>
+<br><br>
+<LI><B>Description</b></LI><br>
+Description of the service. The description is simply a comment that explains the purpose of the service. If the service has no description, then description of its file will be used.
+<br><br>
+<LI><B>Path to file</b></LI><br>
+The path to the service binary file.<br><i>
+&nbsp;&nbsp;<img src="ggalka.gif" align="middle"> - The path is correct.<br>
+&nbsp;&nbsp;<img src="rstop.gif" align="middle"> - The path doesn't exist.<br>
+&nbsp;&nbsp;<img src="bquestion.gif" align="middle"> - The path is determined by PROWiSe Manager. The path is correct.<br>
+&nbsp;&nbsp;<img src="diskremote.gif" align="middle"> - The path is on remote computer. PROWiSe Manager doesn't determine whether this path is correct.
+</i>
+<br><br>
+<LI><B>Error Control</b></LI><br>
+Specifies the severity of the error if this service fails to start during startup, and determines the action taken by the startup program if failure occurs.<br>
+&nbsp;&nbsp;<i>Ignore</i> - The startup (boot) program logs the error but continues the startup operation.<br>
+&nbsp;&nbsp;<i>Normal</i> - The startup program logs the error and displays a message but continues the startup operation.<br>
+&nbsp;&nbsp;<i>Severe</i> - The startup program logs the error. If the last-known-good configuration is being started, the startup operation continues. Otherwise, the system is restarted with the last-known-good configuration.<br>
+&nbsp;&nbsp;<i>Critical</i> - The startup program logs the error, if possible. If the last-known-good configuration is being started, the startup operation fails. Otherwise, the system is restarted with the last-known-good configuration.
+<br><br>
+<LI><B>Startup Type</b></LI><br>
+Specifies when to start the service. This member can be one of the following values:<br>
+&nbsp;&nbsp;<em><i>Boot</i></em> - Specifies a device driver started by the operating system loader.<br>
+&nbsp;&nbsp;<em><i>System</i></em> - Specifies a device driver started by the I/O system after boot devices such as the boot file system and disk driver have been initialized. The device driver started using this flag is not critical to the system boot.<br>
+&nbsp;&nbsp;<em><i>Auto</i></em> - Specifies a device driver or service started by the service control manager automatically during system startup.<br>
+&nbsp;&nbsp;<em><i>Demand</i></em> - Specifies a device driver or service started by the service control manager when a process calls the StartService function.<br>
+&nbsp;&nbsp;<em><i>Disabled</i></em> - Specifies a device driver or service that can no longer be started.
+<br><br>
+<LI><B>Current State</b></LI><br>
+The current state of the service.
+<br><br>
+<LI><B>Process</b></LI><br>
+The Name and Identifier of process of the service.<br>&nbsp; The [>>] button opens a property dialog that shows you more information about this process.
+<br><br>
+<LI><B>Controls Accepted</b></LI><br>
+Control codes the service accepts and processes.
+<br><br>
+<LI><B>Command-line</b></LI><br>
+You can specify the start parameters that apply when you start the service from this dialog box.
+<br><br>
+<LI><B>Start, Stop, Pause, Resume</b><br>
+Buttons to control the service. During startup it specifies which of these messages it handles.
+<br><br>
+</UL><br>
+</body></html>

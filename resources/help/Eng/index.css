@@ -1,0 +1,36 @@
+<!--    
+     index.css
+     Author: DMoN
+     Last-modified: 02.01.2005
+-->
+
+BODY {
+     background-color: white;
+     margin-left: 20px;
+     margin-top: 0px;
+     padding: 0px;
+     font-size: 80%;
+     font-family: verdana, arial, sans-serif ;
+     scrollbar-arrow-color: red;
+     scrollbar-base-color: white;
+     }
+
+.PopupText {color:#008040; display: none; margin-left:7px; font-size: 90%}
+
+A:link {text-decoration: underline; color: black;}
+A:visited{text-decoration: underline; color: black;}
+A:hover {text-decoration: none; color: blue;}
+A:highlight {color: #00a0ff;}
+
+A.wslnk:link {text-decoration: none; color: blue;}
+A.wslnk:visited{text-decoration: none; color: blue;}
+A.wslnk:hover {text-decoration: underline; color: blue;}
+A.wslnk:highlight {color: blue;}
+
+H1 {font-family:verdana,arial,sans-serif;font-size:15pt;font-weight: bold;}
+
+H2 {font-family:sans-serif,verdana,arial;font-size:15pt;font-weight: bold; color:#0000d0;}
+
+EM {color: #606080; font-weight: bolder; font-style: normal;}
+
+HR {height: 1px; background-color: RGB(170,170,170); color: RGB(192,192,192);border: none;}

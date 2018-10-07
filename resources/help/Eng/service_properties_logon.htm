@@ -1,0 +1,42 @@
+<html><head><title>PROWiSe Help - Service Properties: Load And Logon</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<H2>Service Properties: Load And Logon<hr></H2>
+<UL style="margin-left:20px">
+<LI><B>LogOn</b></LI><br>
+Specifies an Account (User Name) under which a service will run.<br><br>
+<ul style="margin-left:20px">
+<li><B>LocalSystem</b><br>
+This account is not recognized by the security subsystem. It has extensive privileges on the local computer, and acts as the computer on the network. Its token includes the <em>NT AUTHORITY\SYSTEM</em> and <em>BUILTIN\Administrators</em> security identifiers; these accounts have access to most system objects.<br>
+The account is not associated with any logged-on user account. This has several implications:<br>
+- The registry key <em>HKEY_CURRENT_USER</em> is associated with the default user, not the current user;<br>
+- The service can open the registry key <em>HKEY_LOCAL_MACHINE\SECURITY</em>;<br>
+- The service presents the computer's credentials to remote servers;<br>
+- If the service opens a command window and runs a batch file, the user could hit CTRL+C to terminate the batch file and gain access to a command window with LocalSystem permissions;<br>
+<ul style="margin-left:20px">
+ <li><B>Allow service to interact with desktop</b><br>
+ Enable this check box to allow the service to display a user interface and receive user input.<br>
+ Typically, services are console applications that are designed to run unattended without a graphical user interface (GUI). However, some services may require occasional interaction with a user.<br>
+ However, note that the following registry key contains a value <em>NoInteractiveServices</em>: <em>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Windows</em>. The <em>NoInteractiveServices</em> value defaults to 0 (zero), which means that services are allowed to run interactively. When <em>NoInteractiveServices</em> is set to a nonzero value, no service started thereafter is allowed to run interactively.
+ </ul>
+</ul>
+<br>
+<LI><B>Load-Order Group</b></LI><br>
+Information of an load ordering group of which this service is a member. If the field is disabled, the service does not belong to a group.<br><br>
+<ul>
+<li><B>Name</b><br>
+The name of the group.
+<br><br>
+<LI><B>Tag in group</b></LI><br>
+A unique tag value for this service in the group.
+Tag can be used for ordering service startup in a load ordering group by specifying a tag order vector in the registry located at: <em>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GroupOrderList</em><br>
+Tags are only evaluated for Drivers that have Boot or System start types.
+</ul>
+<br>
+<LI><B>[View Group]</b></LI><br>
+Opens a dialog box that contains list of all members of this group.
+<br><br>
+</UL><br>
+</body></html>

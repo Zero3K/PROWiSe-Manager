@@ -1,0 +1,34 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=..\..\..\English.chm
+Contents file=EngContents.hhc
+Default topic=overview.htm
+Display compile progress=Yes
+Language=0x409 English (United States)
+Title=PROWiSe Manager
+
+
+[FILES]
+drivers.htm
+modules.htm
+overview.htm
+perfinfo.htm
+processes.htm
+services.htm
+strtpinfo.htm
+windows.htm
+processes_dpcs.htm
+processes_rclick.htm
+shutdown.htm
+gnrlopts.htm
+processes_lowpane.htm
+windows_cntxmnu.htm
+License.htm
+payhelp.htm
+mail.htm
+history.htm
+thanks.htm
+services_builtin.htm
+
+[INFOTYPES]
+

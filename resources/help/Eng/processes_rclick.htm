@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>PROWiSe Help - The Process Context Menu</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<script language="JavaScript">
+function SwHdPopup(popupId){
+ if(popupId.style.display=="block")popupId.style.display="none";
+ else popupId.style.display="block";
+}
+</script>
+<H2>The Process Context Menu<hr></H2>
+<UL style="margin-left:20px">
+<LI><B>Priority</b></LI><br>
+You can change the base priority of a process with this submenu. When you change the base priority of a process the system adjusts the priorities of threads within the process so that they remain at the same relative priority with respect to the new base priority.
+<br><br>
+<LI><B>Launch Depends</b></LI><br>
+If PROWiSe Manager finds the <a onclick="SwHdPopup(depwlkrPopup)" href="#ShowPopupTip">Dependency Walker</a> tool, it will be opened with the selected process as the argument.
+<br>
+<span class="PopupText" id="depwlkrPopup">* The Dependency Walker tool shows static DLL dependencies. (see http://www.dependencywalker.com)</span>
+<br>
+<LI><B>Suspend</b></LI><br>
+If you want a process to become temporarily inactive, so that a system resource such as network, CPU or disk, becomes available for other processes, you can suspend the process. To resume a suspended process chose the <b>Resume</b> item from the process context menu.<br>
+<b style="color:blue">*</b> Suspended processes show in a dark grey color.
+<br><br>
+<LI><B>Kill process</b></LI><br>
+This item terminates a process with the Terminate Process API. Note that a process terminated in this way is not warned of its termination and therefore does not write unsaved data it may have.
+<br><br>
+<P><B>Important!</B> Be careful when ending a process. If you end a system service, some part of the system might not function properly.</P>
+<LI><B>Properties</b></LI><br>
+This selection opens a property dialog that shows you more information about a process.
+<br><br>
+</UL>
+</body></html>

@@ -1,0 +1,100 @@
+<html><head><title>PROWiSe Help - The Services view</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<script language="JavaScript">
+function SwHdPopup(popupId){
+ if(popupId.style.display=="block")popupId.style.display="none";
+ else popupId.style.display="block";
+}
+</script>
+<H2>The Services view<hr></H2>
+Types of services:<br>
+&nbsp;&nbsp;<b><i>Applications</i></b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="exec.gif"> <i>Own process</i> - Service that runs in its own process.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="shrexe.gif"> <i>Shared process</i> - Service that shares a process with other services.
+<br><br>
+&nbsp;&nbsp;<b><i>Drivers</i></b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="driver.gif"> <i>File system driver</i>.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="hrdw.gif"> <i>Device driver</i>.<br>
+<br>
+&nbsp;&nbsp;<img src="intexe.gif"> <img src="intshr.gif"> <b><i>Interactive</i></b> - Application that can interact with the desktop.<br>
+<br><br>
+You can see the following information about service:<br>
+<UL style="margin-left:20px">
+<LI><B>Service Name</b></LI><br>
+Used by Windows to identify the service.
+<br><br>
+<LI><B>Display Name</b></LI><br>
+Used by user interface programs to identify the service.
+<br><br>
+<LI><B>Status</b></LI><br>
+The current status of the service.
+<br><br>
+<LI><B>Startup</b></LI><br>
+Specifies when to start the service. This member can be one of the following values:<br>
+&nbsp;&nbsp;<em><i>Boot</i></em> - Specifies a device driver started by the operating system loader.<br>
+&nbsp;&nbsp;<em><i>System</i></em> - Specifies a device driver started by the I/O system after boot devices such as the boot file system and disk driver have been initialized. The device driver started using this flag is not critical to the system boot.<br>
+&nbsp;&nbsp;<em><i>Auto</i></em> - Specifies a device driver or service started by the service control manager automatically during system startup.<br>
+&nbsp;&nbsp;<em><i>Demand</i></em> - Specifies a device driver or service started by the service control manager when a process calls the StartService function.<br>
+&nbsp;&nbsp;<em><i>Disabled</i></em> - Specifies a device driver or service that can no longer be started.
+<br><br>
+<LI><B>Log On As</b></LI><br>
+The account name in the form of "DomainName\Username", which the service process will be logged on as when it runs. Services of type 'Shared process' are not allowed to specify an account other than LocalSystem. If account isn't specified, the service will be logged on as the "LocalSystem" account.
+<br><br>
+<LI><B>Company Name</b></LI><br>
+The company that produced the file.
+<br><br>
+<LI><B>Path to file</b></LI><br>
+The path to the service binary file.<br>
+If path is received but file doesn't exist, a service show in dark grey color.<br>
+If path is not received, PROWiSe Manager looks for "%SYSTEM_DIR%\Drivers\SERVICE_NAME.sys". If file exist, this path with an exclamation character at the beginning will be used.
+<br><br>
+<LI><B>Load-Order group</b></LI><br>
+The name of an load ordering group of which this service is a member. If the string is empty, the service does not belong to a group.
+<br><br>
+<LI><B>Tag in group</b></LI><br>
+A unique tag value for this service in the group.
+Tag can be used for ordering service startup in a load ordering group by specifying a tag order vector in the registry located at: <em>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GroupOrderList</em><br>
+Tags are only evaluated for Drivers that have Boot or System start types.
+<br><br>
+<LI><B>Depends On</b></LI><br>
+Names of services or load ordering groups that must start before this service. Group name begins with plus sign.
+<br><br>
+<LI><B>Description</b></LI><br>
+Description of the service. The description is simply a comment that explains the purpose of the service. If the service has no description, then description of its file will be used.
+<br><br>
+<LI><B>Accept Shutdown</b></LI><br>
+Specifies whether the system should notify the service when shutdown occurs.
+<br><br>
+<LI><B>Error Control</b></LI><br>
+Specifies the severity of the error if this service fails to start during startup, and determines the action taken by the startup program if failure occurs.<br>
+&nbsp;&nbsp;<i>Ignore</i> - The startup (boot) program logs the error but continues the startup operation.<br>
+&nbsp;&nbsp;<i>Normal</i> - The startup program logs the error and displays a message but continues the startup operation.<br>
+&nbsp;&nbsp;<i>Severe</i> - The startup program logs the error. If the last-known-good configuration is being started, the startup operation continues. Otherwise, the system is restarted with the last-known-good configuration.<br>
+&nbsp;&nbsp;<i>Critical</i> - The startup program logs the error, if possible. If the last-known-good configuration is being started, the startup operation fails. Otherwise, the system is restarted with the last-known-good configuration.
+<br><br>
+</UL>
+<B>Start, Stop, Pause, Resume</b><br>
+During startup a service specifies which of these messages it handles.
+<br><br>
+<B>Services counter (in status bar)</b><br>
+Represents amount of services in the list in the following format: <em>Total/Active/AutoStart</em>. Next (in brackets) is the amount of services with invalid path to executable file.
+<br>* AutoStart is amount of services with one of the following startup-type: Auto, Boot, System.
+<br><br><br><hr>
+<b>Context Menu items:</b>
+<UL style="margin-left:20px">
+<LI><B>Properties</b></LI><br>
+This selection opens a property dialog that shows you more information about selected service.
+<br><br>
+<LI><B>File Properties</b></LI><br>
+This selection opens a property dialog that shows you information about a file of the selected service.
+<br><br>
+<LI><B>Launch Depends</b></LI><br>
+If PROWiSe Manager finds the Dependency Walker tool, it will be started with the binary file of selected service as a command-line argument.
+<br><br>
+<LI><B>Delete</b></LI><br>
+This selection marks the specified service for deletion from the Service Control Manager database and deletes its file from the disk if possible.
+</UL><br>
+</body></html>

@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html rtl=1><meta http-equiv="content-language" content="ru"><meta http-equiv="content-type" content="text/html; charset=windows-1251"><meta name="copyright" content="© 2005 DMoN"><head><title>Мастер удаления</title>
+<hta:application applicationname="PROWiSe_Manager_UnInstall" version="1.8" id="removewizard" copyright="Copyright (c) 2005-2006 Dmitry Komarov" border="dialog" borderstyle="normal" innerborder="no" caption="yes" maximizebutton="no" minimizebutton="yes" scroll="no" selection="no" showintaskbar="yes" singleinstance="yes" sysmenu="yes" windowstate="normal"></head>
+<style>
+body {background-color:#D9E0EC;font-family:Tahoma,Verdana,"MS Sans Serif";font-size:12px;font-weight:none;margin:0px;padding:0px;color:#000000}
+button {font-size:12px;font-weight:none;font-family:Tahoma,Verdana,"MS Sans Serif";height:25px;}
+.topbld0 {font-weight:bold}
+.topbld {font-size:11px;font-weight:bold}
+.instr {font-size:11px;font-weight:none;text-align:left}
+li {list-style-type:none}
+</style><body scroll="no" onload="btnCancel.focus()" id="mainbody"><script language="JavaScript">
+//////
+var sProduct="PROWiSe Manager";
+var sSoftware="PROWiSe Manager 1.8";
+var sStpWizrd="Мастер удаления ";
+var sCncl="Отмена";
+//////
+var c_msDelay=50;
+var sUnInstKey="HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"+sProduct+"\\";
+var x,y,step=-1,InstallPath,Fso,UnInstFail=0,u_cTasks,u_iCur,u_nTries=0,u_nWaits,u_TmrWtId=0,scntuninst="ContinueUninstall",sBE="BeforeEnd";
+x=screen.height; y=screen.width; if(x>0 && y>0){x/=2; y/=2; x-=82; y-=250; window.moveTo(x,y);} window.resizeTo(504,360); document.title=sStpWizrd+sProduct;
+
+function StartUninstall(){
+ Fso=new ActiveXObject("Scripting.FileSystemObject");
+ WshShell=new ActiveXObject("WScript.Shell");
+ u_cTasks=document.all.tags("li");
+ u_iCur=0;
+ window.setTimeout(startAction,c_msDelay);
+}
+function enableQuit(){btnCancel.disabled=0;mainbody.style.cursor="default";u_cTasks[u_iCur].style.listStyleType="circle";}
+function startAction(){u_cTasks[u_iCur].style.listStyleType="disc"; window.setTimeout(performAction, c_msDelay);}
+function performAction(){if(eval(u_cTasks[u_iCur]._action)){u_iCur++; if(u_iCur<u_cTasks.length)window.setTimeout(startAction,c_msDelay);}else {if(u_TmrWtId==0)enableQuit();}}
+function continueAction(bSkip){u_cTasks[u_iCur++].style.listStyleType=(bSkip)?"circle":"disc"; mainbody.style.cursor="progress"; window.setTimeout(startAction,c_msDelay);}
+
+function deleteShortcuts(){var sdata,shcut,i,num;
+ for(num=1;num<3;num++){
+ try{sdata=WshShell.RegRead(sUnInstKey+"Remove"+num);}catch(e){continue;}
+ shcut=sdata.split("|");
+ if(shcut==undefined || shcut[0]==undefined || shcut[1]==undefined)continue;
+ for(i=1;shcut[i]!=undefined;i++){try {Fso.DeleteFile(shcut[0]+shcut[i]);}catch(e){}}
+ try{
+  var pfolder=Fso.GetFolder(shcut[0]);
+  if(pfolder.Files.Count==0){try{Fso.DeleteFolder(pfolder);}catch(e){}}
+ }catch(e){}
+ }
+ return true;
+}
+
+function restoreTaskMan(){var path,str;
+ try{
+  WshShell.RegWrite(sUnInstKey+scntuninst,0,"REG_SZ");
+  path=WshShell.RegRead(sUnInstKey+"InstallLocation");
+  WshShell.Run('"'+path+'PROWiSe.exe" /drkey',0,false);
+ }catch(e){var dw=Ask1(); if(dw==5)return true; else if(dw==4)return restoreTaskMan(); else return false;}
+ u_nWaits=0; waitContinue();
+ return false;
+}
+
+function waitContinue(){var str;
+ try{
+  if(WshShell.RegRead(sUnInstKey+scntuninst)=="Yes"){
+   continueAction(0);
+   return true;
+  }
+ }catch(e){}
+ if(u_cTasks[u_iCur].style.listStyleType!="circle")u_cTasks[u_iCur].style.listStyleType="circle";
+ else u_cTasks[u_iCur].style.listStyleType="disc";
+ mainbody.style.cursor="wait";
+ if((u_nWaits++)>20){u_nWaits=0; var dw=Ask1(); if(dw==5){continueAction(1);return true;} else if(dw==3){enableQuit();return false;}}
+ u_TmrWtId=window.setTimeout(waitContinue,500);
+ return true;
+}
+
+function deleteFiles(){var ipath,sd,file,i;
+ try{
+  ipath=WshShell.RegRead(sUnInstKey+"InstallLocation");
+  sd=WshShell.RegRead(sUnInstKey+"Remove0");
+  file=sd.split("|");
+  if(file==undefined)return true;
+  for(i=0;!isNaN(ipath.charCodeAt(i)) && i<512;i++);
+  if(ipath.charAt(--i)!="\\")ipath+="\\";  
+  for(i=0;file[i]!=undefined;i++){try {Fso.DeleteFile(ipath+file[i]);}catch(e){}}
+  var pfolder=Fso.GetFolder(ipath),ppfldr;
+  while(pfolder.Files.Count==0 && pfolder.SubFolders.Count==0){
+   ppfldr=Fso.GetParentFolderName(pfolder);
+   try{Fso.DeleteFolder(pfolder); pfolder=Fso.GetFolder(ppfldr);}catch(e){break;}
+  }
+ }catch(e){alert(e.description);}
+ return true;
+}
+
+function deleteUninstall(){try{WshShell.RegDelete(sUnInstKey);}catch(e){} return true;}
+
+function reportFinished(){
+ btnNext.disabled=0; mainbody.style.cursor="default";
+ btnNext.innerHTML="Готово";
+ topstr.innerText="Удаление завершено";
+ btmstr.innerHTML=(UnInstFail==0)?"<br>Удаление "+sSoftware+" успешно завершено.":"<br>Удаление завершено с ошибками.";
+ return true;
+}
+
+function NextStep(){step++;
+ if(step==0){
+  pagetitle.innerHTML="<span class='topbld0'>Вас приветствует мастер удаления "+sProduct+"</span>";
+  pagediv.innerHTML="Эта программа удалит "+sSoftware+" с Вашего компьютера.<br><br>Перед началом удаления убедитесь, что "+sSoftware+" не запущен.";
+  btnNext.innerHTML="Удалить";
+  btnCancel.innerText=sCncl;
+ }
+ if(step==1){
+  pagetitle.innerHTML="<span class='topbld' id='topstr'>Удаление программы</span><br><span id='btmstr' class='instr'><br>Подождите пока удалятся все файлы с диска и записи из реестра.</span>";
+  pagediv.innerHTML="<br><br><br><ul id=oProgress style='margin-bottom: 0pt'><li _action=deleteShortcuts()>Удаление ярлыков<br><br><li _action=restoreTaskMan()>Возвращение Диспетчера Задач<br><br><li _action=deleteFiles()>Удаление файлов<br><br><li _action=deleteUninstall()>Удаление информации о снятии<br><br><li _action=reportFinished() style='display:none'>OK</ul>";
+  btnNext.disabled=1; btnCancel.disabled=1; mainbody.style.cursor="progress";
+  StartUninstall();
+ }
+ else if(step==2){
+  window.close();
+ }
+}
+</script>
+<script language="VBScript">
+Function Ask1()
+Ask1=MsgBox("Не удается вернуть Диспетчера Задач.", 50,sStpWizrd+sProduct)
+end Function
+</script>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-left: 0px"><tr><td style="width:100%;height:50px;background-color:#ffffff;vertical-align:middle;text-align:center;font-size:16px;border-bottom:1px solid threedshadow" id="pagetitle"></td></tr><tr>
+<td style="width:100%;height:235px;vertical-align:top;text-align:center;font-weight:none;font-size:11px;border-top:1px solid white;border-bottom:1px solid threedshadow"><div style="width:90%;height:230px;vertical-align:top;text-align:left;margin-top:5px" id="pagediv"></div>
+</td></tr><tr><td style="border-top:1px solid white;vertical-align:middle;text-align:right;background-color:#ECE9D8;">
+<table style="width:100%;margin:5px" border=0 cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle;text-align:left;color:#808080;font-size:10px;font-family:Arial">DMoNsoft UnInstall System v1.0<br><br style="font-size:5px">Copyright &copy; 2005 DMoN</td><td>
+<div style="margin:5px"><button onclick="NextStep();" id="btnNext"></button>&nbsp;&nbsp;&nbsp;<button onclick="javascript:window.close();" id="btnCancel"></button>&nbsp;&nbsp;&nbsp;</div>
+</td></tr></table></td></tr></table><script>NextStep();</script></body></html>

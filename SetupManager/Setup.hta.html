@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html rtl=1><meta http-equiv="content-language" content="ru"><meta http-equiv="content-type" content="text/html; charset=windows-1251"><meta name="copyright" content="© 2005 DMoN"><head>
+<title>Мастер установки PROWiSe Manager</title><hta:application applicationname="PROWiSe_Manager_Setup" version="1.8" id="setupwizard" copyright="Copyright (c) 2005-2006 Dmitry Komarov" border="dialog" borderstyle="normal" innerborder="no" caption="yes" icon="Setup.dat" maximizebutton="no" minimizebutton="yes" scroll="no" selection="no" showintaskbar="yes" singleinstance="yes" sysmenu="yes" windowstate="normal"></head>
+<style>
+body {background-color:#D9E0EC;font-family:Tahoma,Verdana,"MS Sans Serif";font-size:12px;font-weight:none;margin:0px;padding:0px;color:#000000}
+button {font-size:12px;font-weight:none;font-family:Tahoma,Verdana,"MS Sans Serif";height:25px;}
+.topbld0 {font-weight:bold}
+.topbld {font-size:11px;font-weight:bold}
+.instr {font-size:11px;font-weight:none;text-align:left}
+.txtar {height:180px;width:310px;font-size:11px;font-family:Arial,Verdana}
+</style>
+<body scroll="no" id="mainbody"><script language="JavaScript">
+//////
+var sProduct="PROWiSe Manager";
+var sSoftware="PROWiSe Manager 1.8beta";
+var sProductDesc="PROWiSe Manager - это замена стандартного Диспетчера Задач Windows, обладающая гораздо большими возможностями управления процессами и службами.<br><br>";
+//////
+var FilesDir="";
+var FilesToCopy=new Array("PROWiSe.exe","Russian.chm","WinStyles.h","Russian.lng","ModernMenu.dll",0);
+var InstallDir="DMoNsoft\\PROWiSe\\";
+var ShcutDir="PROWiSe Manager\\";
+var Shcut_Main=sProduct+".lnk";
+var Shcut_Help="Справка.lnk";
+var Shcut_UnInst="Удаление "+sProduct+".lnk";
+//////
+var sStpWizrd="Мастер установки ";
+var sErr=" - Ошибка !!! ";
+var sNext="Далее&nbsp;&gt;";
+var sCncl="Отмена";
+//////
+var sBE="BeforeEnd",x,y,sNxt,step=-1,InstallPath="",Fso=null,WshShell=0,SetupFail=0,StartMenuDir=0,DesktopDir=0,StartMenuPath=0,DesktopPath=0,delta=5;
+x=screen.height; y=screen.width;
+if(x>0 && y>0){
+ x/=2; y/=2; 
+ x-=82;
+ y-=250;
+ window.moveTo(x,y);
+}
+window.resizeTo(504,360);
+
+Fso=new ActiveXObject("Scripting.FileSystemObject");
+WshShell=new ActiveXObject("WScript.Shell");
+
+function GetProgramFilesDir(){var Path;
+ try {Path=WshShell.RegRead("HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ProgramFilesDir");}
+ catch(e){return 0;}
+ return Path;
+}
+
+function RunInstalledSoft(){try {WshShell.Run("\""+InstallPath+FilesToCopy[0]+"\"",1,false);} catch(e){}}
+
+function MakeShortcut(pPath,sLnk,sDsc,sIcon,sTrgt,sArgs){var link; try{link=WshShell.CreateShortcut(pPath+sLnk); link.Arguments=sArgs; link.Description=sDsc; link.HotKey=""; link.IconLocation=sIcon; link.TargetPath=sTrgt; link.WindowStyle=1; link.WorkingDirectory=InstallPath; link.Save();}catch(e){}}
+
+function CreateShortcuts(){var pPath;
+ if(StartMenuDir!=0){
+  pPath=WshShell.SpecialFolders(StartMenuDir);
+  if(pPath!=""){
+   pPath+="\\"+ShcutDir; StartMenuPath=pPath;
+   try{Fso.CreateFolder(pPath);}catch(e){}
+  }
+  else return 75;
+  MakeShortcut(pPath,Shcut_Main,"",InstallPath+FilesToCopy[0]+", 0",InstallPath+FilesToCopy[0],"");
+  MakeShortcut(pPath,Shcut_Help,"",InstallPath+FilesToCopy[1],InstallPath+FilesToCopy[1],"");
+  MakeShortcut(pPath,Shcut_UnInst,"",InstallPath+FilesToCopy[0]+", 22","\"%SystemRoot%\\system32\\mshta.exe\"","\"res://"+InstallPath+FilesToCopy[0]+"/uninstall.hta\"");
+ }
+ if(DesktopDir!=0){
+  pPath=WshShell.SpecialFolders(DesktopDir);
+  if(pPath=="")return 75;
+  DesktopPath=pPath;
+  MakeShortcut(pPath+"\\",Shcut_Main,"",InstallPath+FilesToCopy[0]+", 0",InstallPath+FilesToCopy[0]);
+ }
+ return 0;
+}
+
+var uiStrs=new Array("DisplayName","Comments","DisplayVersion","Publisher","URLInfoAbout","URLUpdateInfo","HelpLink");
+var uiAnsw=new Array(sSoftware,"Copyright (c) 2004-2005 Дмитрий Комаров","1.7","DMoNsoft","http://dmonsoft.narod.ru","http://dmonsoft.narod.ru/prowise.html","dmonsoft@narod.ru");
+
+function CreateUninstall(){var UnKey="HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"+sProduct+"\\",err=0,remov="";
+ for(i=0;i<6;i++){
+  try{WshShell.RegWrite(UnKey+uiStrs[i],uiAnsw[i],"REG_SZ");}catch(e){err=1;}
+ }
+ try{
+  WshShell.RegWrite(UnKey+uiStrs[6],uiAnsw[6],"REG_EXPAND_SZ");
+  WshShell.RegWrite(UnKey+"NoModify",1,"REG_DWORD");
+  WshShell.RegWrite(UnKey+"NoRepair",1,"REG_DWORD");
+  WshShell.RegWrite(UnKey+"InstallLocation",InstallPath,"REG_SZ");
+  //WshShell.RegWrite(UnKey+"ShortcutPath",InstallPath+FilesToCopy[0]+", 0","REG_SZ");
+  WshShell.RegWrite(UnKey+"UninstallString",'"%SystemRoot%\\system32\\mshta.exe" "res://'+InstallPath+FilesToCopy[0]+'/uninstall.hta"',"REG_EXPAND_SZ");
+  for(var i=0;FilesToCopy[i]!=0;i++){
+   remov+=FilesToCopy[i]; remov+="|";
+  }
+  if(remov!="")WshShell.RegWrite(UnKey+"Remove0",remov,"REG_SZ");
+  if(StartMenuDir)WshShell.RegWrite(UnKey+"Remove1",StartMenuPath+"|"+Shcut_Main+"|"+Shcut_Help+"|"+Shcut_UnInst,"REG_SZ");
+  if(DesktopPath)WshShell.RegWrite(UnKey+"Remove2",DesktopPath+"|"+Shcut_Main,"REG_SZ");
+ }catch(e){err=e.number&0xFFFF;}
+ return err;
+}
+
+function NextPdiv(){pagediv.filters.revealTrans.apply(); pagediv.filters.revealTrans.play();}
+
+function NextStep(){step++;
+ NextPdiv();
+ if(step==0){
+  pagetitle.innerHTML="<span class='topbld0'>Вас приветствует мастер установки "+sProduct+"</span>";
+  pagediv.innerHTML=sProductDesc+"Эта программа установит "+sSoftware+" на Ваш компьютер.<br><br>Несмотря на то что другие программы никак не должны повлиять на процесс установки, рекомендуется их всё же закрыть перед началом установки.<br><br>Щёлкните <Далее>, чтобы продолжить, или <Отмена>, чтобы выйти из программы установки.";
+  btnNext.innerHTML=sNext;
+  btnCancel.innerText=sCncl;
+ }
+ if(step==1){var hFile;
+  pagetitle.innerHTML="<span class='topbld'>Лицензоннное соглашение</span><br><span class='instr'>Прочтите условия лицензионного соглашения перед установкой "+sProduct+".</span>";
+  pagediv.innerHTML="<textarea readonly wrap=virtual id='lictxt' class='txtar'></textarea><br><input type='checkbox' name='lcAgree' value='1' id='btnacpt' style='vertical-align:middle' onclick='javascript:btnNext.disabled=(btnacpt.checked)?0:1;'>Я согласен со всеми положениями данного лицензионного соглашения";
+  btnNext.disabled=1;
+  try{
+   hFile=Fso.OpenTextFile("Setup\\Setup.lic",1,false);//Setup\\
+   lictxt.innerText=hFile.ReadAll(); hFile.Close();
+  }
+  catch(e){btnacpt.disabled=1;}
+ }
+ else if(step==2){
+  pagetitle.innerHTML="<span class='topbld'>Выбор папки установки</span><br><span class='instr'><br>Выберите папку для установки "+sProduct+".</span>";
+  pagediv.innerHTML="&nbsp; Программа установки установит "+sSoftware+" в указанную директорию.<br><br>Нажмите Далее чтобы продолжить.<br><br><br><br>Директория назначения:<br><input type='text' id='setupPath' size=35><br><br><br>Необходимо места: 0.56 Мб";
+  InstallPath=GetProgramFilesDir()+"\\"+InstallDir;
+  setupPath.value=InstallPath; setupPath.style.backgroundColor="#316AC5"; setupPath.style.color="#ffffff";
+ }
+ else if(step==3){
+  InstallPath=setupPath.value;
+  for(var i=0;!isNaN(InstallPath.charCodeAt(i)) && i<512;i++);
+  if(InstallPath.charAt(--i)!="\\")InstallPath+="\\";
+  pagetitle.innerHTML="<span class='topbld'>Создание ярлыков</span><br><span class='instr'><br>Укажите какие ярлыки требуется создать.</span>";
+  pagediv.innerHTML="&nbsp; Программа установки создаст необходимые Вам ярлыки.<br><br><input type='checkbox' id='scg' style='vertical-align:middle' checked onclick='javascript:scga.disabled=(scga.disabled)?0:1;'>Группа в Главном меню<br>&nbsp;&nbsp;&nbsp;<input type='checkbox' id='scga' style='vertical-align:middle'>Для всех пользователей<br><br><input type='checkbox' id='scd' style='vertical-align:middle' checked onclick='javascript:scda.disabled=(scda.disabled)?0:1;'>Ярлык на Рабочем столе<br>&nbsp;&nbsp;&nbsp;<input type='checkbox' id='scda' style='vertical-align:middle'>Для всех пользователей";
+  btnNext.innerText="Установить";
+ }
+ else if(step==4){
+  if(scg.checked==false)StartMenuDir=0;
+  else if(scga.checked==true)StartMenuDir="AllUsersPrograms";
+  else StartMenuDir="Programs";
+  if(scd.checked==false)DesktopDir=0;
+  else if(scda.checked==true)DesktopDir="AllUsersDesktop";
+  else DesktopDir="Desktop";
+  pagetitle.innerHTML="<span class='topbld' id='topstr'>Копирование файлов</span><br><span id='btmstr' class='instr'><br>Подождите пока программа скопирует все необходимые файлы</span>";
+  pagediv.innerHTML="<textarea readonly wrap=off id='progresstxt' class='txtar'></textarea>";
+  btnNext.disabled=1;
+  var InstallPath_Dir;
+  var dir_counts=1,vdc,totalcnt;
+  try{
+   progresstxt.insertAdjacentText(sBE,"Директория назначения: "+InstallPath);
+   Fso.CreateFolder(InstallPath);
+   progresstxt.insertAdjacentText(sBE," - Создана\r\n");
+  }
+  catch(e){
+   totalcnt=0;
+   for(var i=0;!isNaN(InstallPath.charCodeAt(i)) && i<512;i++){
+   	if(InstallPath.charAt(i)=="\\")totalcnt++;
+   }
+   while(dir_counts<totalcnt){
+    InstallPath_Dir=InstallPath;
+    vdc=0;
+    for(var i=0;!isNaN(InstallPath_Dir.charCodeAt(i)) && i<512;i++){
+     if(InstallPath_Dir.charAt(i)=="\\")vdc++;
+     if(vdc>dir_counts){
+      InstallPath_Dir=InstallPath_Dir.slice(0,i);
+      dir_counts=vdc;
+      break;
+     }
+    }
+    try{
+   	 Fso.CreateFolder(InstallPath_Dir);
+    }
+    catch(e){
+     if((e.number&0xFFFF)!=58)dir_counts=totalcnt+5;
+    }
+   }
+   if(dir_counts!=totalcnt+5){
+   	progresstxt.insertAdjacentText(sBE," - Создана\r\n");
+   }
+   else{
+    progresstxt.insertAdjacentText(sBE,sErr+e.description+"\r\n");
+    if((e.number&0xFFFF)!=58)SetupFail=1;
+   }
+  }
+  for(var i=0;FilesToCopy[i]!=0;i++){
+   progresstxt.insertAdjacentText(sBE,"Копирование: "+FilesDir+FilesToCopy[i]);
+   try{
+    Fso.CopyFile(FilesDir+FilesToCopy[i],InstallPath,true);
+    progresstxt.insertAdjacentText(sBE," - Успешно\r\n");
+   } catch(e){
+    progresstxt.insertAdjacentText(sBE,sErr+e.description+"\r\n");
+    SetupFail=1;
+   }
+  }
+  var dw; sNxt=0;
+  progresstxt.insertAdjacentText(sBE,"Создание ярлыков");
+  dw=CreateShortcuts();
+  if(dw==0)progresstxt.insertAdjacentText(sBE," - Успешно\r\n");
+  else {progresstxt.insertAdjacentText(sBE,sErr+e.description+"\r\n"); SetupFail=1;}
+  progresstxt.insertAdjacentText(sBE,"Сохранение информации для удаления");
+  dw=CreateUninstall();
+  if(dw==0)progresstxt.insertAdjacentText(sBE," - Успешно\r\n");
+  else {progresstxt.insertAdjacentText(sBE,sErr+e.description+"\r\n"); SetupFail=1;}
+  btnNext.disabled=0; btnCancel.disabled=1;
+  btnNext.innerHTML=sNext;
+  topstr.innerText="Установка завершена";
+  btmstr.innerHTML=(SetupFail==0)?"<br>Установка успешно завершена.":"<br>Установка завершена с ошибками.";
+ }
+ else if(step==5){
+  btnNext.innerHTML="Готово";
+  pagetitle.innerHTML="<span class='topbld0'>Завершение мастера установки "+sProduct+"</span>";
+  pagediv.innerHTML="Установка "+sSoftware+" выполнена.<br><br>Нажмите 'Готово' для выхода из программы установки.<br><br><br><br><input id='runnow' type='checkbox' style='vertical-align:middle'>Запустить "+sSoftware;
+  if(SetupFail==0)runnow.checked=true;
+ }
+ else if(step==6){
+  if(runnow.checked==true)RunInstalledSoft();
+  window.close();
+ }
+}
+</script>
+<script language="VBScript">
+Sub ConfirmExit()
+if MsgBox ("Вы действительно хотите отменить установку "+sSoftware+" ?", 52,sStpWizrd+sProduct)=6 then window.close()
+end sub
+</script>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-left: 0px"><tr>
+<td style="width:156px;border-bottom:1px solid threedshadow" rowspan=2><img src="Setup.bin" height=289 width=156 border=0 align="center"></td>
+<td style="width:100%;height:50px;background-color:#ffffff;vertical-align:middle;text-align:center;font-size:16px;border-bottom:1px solid threedshadow;" id="pagetitle"></td></tr><tr>
+<td style="width:100%;height:235px;vertical-align:top;text-align:center;font-weight:none;font-size:11px;border-top:1px solid white;border-bottom:1px solid threedshadow">
+<div style="width:90%;height:230px;vertical-align:top;text-align:left;margin-top:5px;filter:revealTrans(Duration=1,Transition=12)" id="pagediv"></div></td></tr><tr><td colspan=2 style="border-top:1px solid white;vertical-align:middle;text-align:right;background-color:#ECE9D8;">
+<table style="width:100%;margin:5px" border=0 cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle;text-align:left;color:#ACA899;font-size:10px;font-family:Arial; filter: DropShadow(Color=#FFFFFF, OffX=1, OffY=1, Positive=true)">DMoNsoft Install System v1.1<br><br style="font-size:5px">Copyright &copy; 2005 DMoN</td><td>
+<div style="margin:5px"><button onclick="NextStep();" id="btnNext"></button>&nbsp;&nbsp;&nbsp;<button onclick="ConfirmExit();" id="btnCancel"></button>&nbsp;&nbsp;&nbsp;</div>
+</td></tr></table></td></tr></table><script>NextStep();</script></body></html>

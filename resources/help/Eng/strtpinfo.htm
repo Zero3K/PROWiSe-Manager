@@ -1,0 +1,64 @@
+<html>
+<head>
+<title>PROWiSe Help - The Startup view</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<script language="JavaScript">
+function SwHdPopup(popupId){
+ if(popupId.style.display=="block")popupId.style.display="none";
+ else popupId.style.display="block";
+}
+</script>
+<H2>The Startup view<hr></H2>
+<P>On the <B>Startup</B> tab you can see the programs that runs automatically at Windows startup.</P>
+<UL style="margin-left:20px">
+<LI><B>Item</b></LI><br>
+Value of the given field depends on item location. This member can be one of the following values:
+<UL style="margin-left:20px">
+ <LI>Name of registry value</LI>
+ <LI>File name (for files and shortcuts in <em>Startup</em> folder)</LI>
+ <LI>Explorer BHO (Explorer Browser Helper Object)</LI>
+ <LI>IExplorer Plugin (for files located in <em>%PROGRAM_FILES_DIR%\Internet Explorer\Plugins</em> )</LI>
+</UL>
+<br>
+<LI><B>Item Parameters</b></LI><br>
+Value of the given field depends on item location. This member can be one of the following values:
+<UL style="margin-left:20px">
+ <LI>The data of registry value</LI>
+ <LI>The path to executable file (for shortcuts in Startup folder)</LI>
+ <LI>Name of registry sub-key (for Explorer <a onclick="SwHdPopup(ebhoPopup)" href="#ShowPopupTip">Browser Helper Object</a>)</LI>
+ <span class="PopupText" id="ebhoPopup">* Browser Helper Object - plugin to Internet Explorer.</span>
+ <LI>The file name (for IExplorer Plugin )</LI>
+</UL>
+<br>
+<LI><B>Item Location</b></LI><br>
+Value of the given field depends on item location. This member can be one of the following values:
+<UL style="margin-left:20px">
+ <LI>Registry key</LI>
+ <LI>Path to the shortcut (for shortcuts in Startup folder)</LI>
+ <LI>Path to the file (for IExplorer Plugin)</LI><br>
+</UL><br>
+</UL><br>
+<hr>
+<b>Context Menu items:</b>
+<UL style="margin-left:20px">
+ <LI>Jump to Location</LI>
+ <UL style="margin-left:20px">
+  <LI>If the Location is registry, PROWiSe Manager will launch the Registry Editor (if it hasn’t been launched already) and navigate directly to the value or key.</LI>
+  <LI>If the Location is a folder, PROWiSe Manager will open it in Windows Explorer.</LI>
+ </UL><br>
+ <LI>Jump to Path</LI><br>
+ If the Item Parameters is a valid path, PROWiSe Manager will open it in Windows Explorer.
+ <br><br>
+ <LI>CLSID information</LI><br>
+ PROWiSe Manager opens a dialog box with data of the following values from the registry: <em>Default</em>, <em>ProgID</em>, <em>InprocServer</em>, <em>InprocServer32</em>, <em>LocalServer</em>, <em>LocalServer32</em>.
+ <br><br>
+ <LI>Jump to CLSID</LI><br>
+ PROWiSe Manager will launch the Registry Editor and navigate directly to the sub-key of <em>HKEY_CLASSES_ROOT\CLSID\{...}</em>
+ <br><br>
+ <LI>Delete Item</LI><br>
+ Depending on the item, the registry value will be removed, or the file will be deleted. If the item is the shortcut then it will be deleted, instead of an executable file.
+</UL>
+</body></html>

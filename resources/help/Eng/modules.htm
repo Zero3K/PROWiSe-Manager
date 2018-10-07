@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>PROWiSe Help - The Modules pane</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<script language="JavaScript">
+function SwHdPopup(popupId){
+ if(popupId.style.display=="block")popupId.style.display="none";
+ else popupId.style.display="block";
+}
+</script>
+<H2>The Modules pane<hr></H2>
+<P>On the <B>Modules</B> pane, you can view information about libraries loaded by selected process.</P>
+<UL style="margin-left:20px">
+<LI><B>File</b></LI><br>
+The module's filename.
+<br><br>
+<LI><B>Path</b></LI><br>
+The full path and filename of the driver.
+<br><br>
+<LI><B>Description</b></LI><br>
+File description.
+<br><br>
+<LI><B>Company</b></LI><br>
+The company that produced the file.
+<br><br>
+<LI><B>Version</b></LI><br>
+File version number.
+<br><br>
+<LI><B>Image Base</b></LI><br>
+The base virtual address where the image is loaded (hex value).
+<br><br>
+<LI><B>Image Size</b></LI><br>
+The size of the image (hex value).
+<br><br>
+<LI><B>Image Base Address</b></LI><br>
+During creation of executable module, a linker guesses, that the file will be mapped at a specified place in memory.
+This address is the Image Base Address. If operating system can't map a file at this address, the system's loader makes some code modification.<br>
+<b style="color:blue">*</b> Relocated module show in yellow color.
+<br><br>
+</UL>
+<br><br><hr>
+<b>Context Menu items:</b>
+<UL style="margin-left:20px">
+<LI><B>File Properties</b></LI><br>
+This selection opens a property dialog that shows you information about a file selected.
+<br><br>
+<LI><B>Launch Depends</b></LI><br>
+If PROWiSe Manager finds the Dependency Walker tool, it will be started with the selected DLL as a command-line argument.
+</UL><br>
+</body></html>
