@@ -1,4 +1,8 @@
 
+// Fallback strings for error handling when language strings are not available
+char ErrCode_fallback[]="Error Code: 0x";
+char ERROR_fallback[]="ERROR";
+
 void ErrorStringFromNtError(DWORD ErrorCode,DWORD fOptions,void *strBuffer){char *perb; DWORD dwFlags,ln,DosError;
  bool allocBuf=0; if(strBuffer==0)return;
  DosError=ntdllFunctions.RtlNtStatusToDosError(ErrorCode);
@@ -45,7 +49,9 @@ void FailMessage(char* msgTxt,DWORD ErrCode,DWORD dwOptions){DWORD ln,m,v,error_
  }
  if(error_code==0 && dwOptions&FMSG_NO_SUCCESSINFO)goto skipFormatMsg;
  if(dwOptions&FMSG_HIDECODE){msgTxt=ErrBuf+ln; goto skip_code;}
- copystring(ErrBuf+ln,ErrCode_txt);
+ // Use fallback string if language strings are not available
+ char *errCodeText = (smemTable && smemTable != (STRINGS_MEM_TABLE*)0xBAADF00D) ? ErrCode_txt : ErrCode_fallback;
+ copystring(ErrBuf+ln,errCodeText);
  ln=getstrlen(ErrBuf);
  msgTxt=ErrBuf+ln;
  if(dwOptions&FMSG_SMART_SHOWCODE && ErrCode<15000){bSmartCode=1; msgTxt-=2; goto err_skiphex_dec;}
@@ -97,7 +103,9 @@ skip_code:
  }
  skipWriteLog:
  if(dwOptions&FMSG_SHOW_MSGBOX){
-  MessageBox(GetActiveWin(),ErrBuf,ERROR_txt,MB_OK|MB_SETFOREGROUND|(((dwOptions&FMSG_ICONSTOP)==0)?MB_ICONWARNING:MB_ICONSTOP));
+  // Use fallback string if language strings are not available
+  char *errorText = (smemTable && smemTable != (STRINGS_MEM_TABLE*)0xBAADF00D) ? ERROR_txt : ERROR_fallback;
+  MessageBox(GetActiveWin(),ErrBuf,errorText,MB_OK|MB_SETFOREGROUND|(((dwOptions&FMSG_ICONSTOP)==0)?MB_ICONWARNING:MB_ICONSTOP));
  }
  if(ErrBuf)LocalFree(ErrBuf);
  SetLastError(0);
