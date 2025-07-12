@@ -15,8 +15,8 @@
 #define LNGFILE_COMPATIBILITY_FLAG 14082006//LNGFILE_COMPATIBILITY_FLAG
 #define LNGFILE_COMPATIBILITY_OLDFLAG 14082006
 
-#define THIS_VERSION_PROGSETTS_COMPATABILITY_SIGN 0x0180//Для недопущения использования настроек предыдущей версии ;  last=0x1022
-#define THIS_VERSION_PROGSETTS_VERSION 0x0180//Для распознавания версий
+#define THIS_VERSION_PROGSETTS_COMPATABILITY_SIGN 0x0180//пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ ;  last=0x1022
+#define THIS_VERSION_PROGSETTS_VERSION 0x0180//пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 #define THIS_VERSION_PROGSETTS_SIGN ( (THIS_VERSION_PROGSETTS_VERSION<<16) | THIS_VERSION_PROGSETTS_COMPATABILITY_SIGN )
 
 #define _WIN32_IE 0x0500
@@ -43,7 +43,7 @@
 #include "Variables.h"
 #include "FuncsDefines.h"
 
-#include "StringF.cpp"// Функции для работы со строками
+#include "StringF.cpp"// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 #include "HeadFuncs.cpp"
 #include "Errors_Logs.cpp"
 #include "HookCreateWindow.cpp"
@@ -72,6 +72,12 @@ DWORD n;
 OPENFILENAME of;
 char HeapCreate_txt[]="HeapCreate";
 
+// Fallback strings for critical error messages when language file loading fails
+char ReadOfLngFileFailed_fallback[]="The file corresponding to the selected language isn't found.";
+char AnException_fallback[]="An exception has occured!\n\nException Code: 0x";
+char ExceptionAdr_fallback[]="\nException Address: 0x";
+char TheProgWillTerminated_fallback[]="\n\nThe program will be terminated.";
+
 bool EnablePrivelege(char *privelegeName,DWORD dwState){LUID luid; HANDLE hToken; TOKEN_PRIVILEGES tkp; bool ret;
  OpenProcessToken((HANDLE)-1,TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY,&hToken);
  tkp.PrivilegeCount=1;
@@ -98,11 +104,16 @@ create_thread:
 }
 
 LONG WINAPI myTopLevelExceptionFilter(_EXCEPTION_POINTERS *ExceptionInfo){char Text[256],buf[20];
- copystring(Text,AnException_txt);
+ // Use fallback strings if language file strings are not available
+ char *anExceptionText = (smemTable && smemTable != (STRINGS_MEM_TABLE*)0xBAADF00D) ? AnException_txt : AnException_fallback;
+ char *exceptionAdrText = (smemTable && smemTable != (STRINGS_MEM_TABLE*)0xBAADF00D) ? ExceptionAdr_txt : ExceptionAdr_fallback;
+ char *progWillTerminatedText = (smemTable && smemTable != (STRINGS_MEM_TABLE*)0xBAADF00D) ? TheProgWillTerminated_txt : TheProgWillTerminated_fallback;
+ 
+ copystring(Text,anExceptionText);
  HexToString(ExceptionInfo->ExceptionRecord->ExceptionCode,buf); strappend(Text,buf);
- strappend(Text,ExceptionAdr_txt);
+ strappend(Text,exceptionAdrText);
  HexToString((DWORD)(ExceptionInfo->ExceptionRecord->ExceptionAddress),buf); strappend(Text,buf);
- strappend(Text,TheProgWillTerminated_txt);
+ strappend(Text,progWillTerminatedText);
  FailMessage(Text,0,FMSG_NO_INFO|FMSG_NO_SUCCESSINFO|FMSG_WRITE_LOG|FMSG_SHOW_MSGBOX);
  return EXCEPTION_EXECUTE_HANDLER;
 }
@@ -556,10 +567,10 @@ continue_run:
  ProgramDirPath.fstrLen=uPath->Length;
  ProgramDirPath.pathLen=uPath->Length; if(i>0)i-=2; ProgramDirPath.pathLen-=(USHORT)i;
  ProgramDirPath.CharCount=ProgramDirPath.pathLen; ProgramDirPath.CharCount/=(USHORT)2;
- //// Обработка CommandLine
+ //// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ CommandLine
  cmd_NoRegSetts=0; cmd_Remove=0;
  CmdLine_Determine(rtup->CommandLine.Buffer,lbuf2048,&LngFileName);
- //// Установка настроек
+ //// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  if(cmd_NoRegSetts)goto SetDefaultSetts;
  //// Load Settings from Registry
  LSA_OBJECT_ATTRIBUTES oat; UNICODE_STRING ustr;//KEY_VALUE_PARTIAL_INFORMATION *kvp; kvp=(KEY_VALUE_PARTIAL_INFORMATION*)lbuf2048;
@@ -581,7 +592,7 @@ continue_run:
 open_prog_subkey:
  ustr.Buffer=hk_mainW; ustr.Length=getstrlenW(ustr.Buffer);
  #ifdef SETTS_REGKEY_HIDE
-  ustr.Length++;//чтобы WinAPI не открыл
+  ustr.Length++;//пїЅпїЅпїЅпїЅпїЅ WinAPI пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  #endif
  oat.RootDirectory=hMainKey;
  if((ErrCode=ntdllFunctions.NtCreateKey((HANDLE*)&hMainKey,KEY_QUERY_VALUE|KEY_SET_VALUE,&oat,0,0,0,&n))!=0){
@@ -668,10 +679,10 @@ end_load_setts:
  t0buf2=(char*)dwp; dwp+=600;
  t1buf2=(char*)dwp; dwp+=300;
  t2buf2=(char*)dwp; dwp+=300;
- tbuf3=(char*)dwp; dwp+=300;//потоки не пересекаются
+ tbuf3=(char*)dwp; dwp+=300;//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  t1buf4=(char*)dwp; dwp+=300;//Windows,Performance
  t2buf4=(char*)dwp; dwp+=300;//About
- //hwndsStart=(DWORD*)n; n+=4000; hwndsEnd=n;//HWNDs для Windows_tab = 1000 DWORDs
+ //hwndsStart=(DWORD*)n; n+=4000; hwndsEnd=n;//HWNDs пїЅпїЅпїЅ Windows_tab = 1000 DWORDs
  t1buf512=(char*)dwp; dwp+=512;//getTime(&), getDate(&)
  pvbuf1=(char*)dwp; dwp+=524;//Processes
  wpbuf1=(void*)dwp; dwp+=2048;//check isn't too more //Processes
@@ -686,7 +697,7 @@ end_load_setts:
  tbuf8=(char*)dwp; dwp+=120;//handlepane
  t1buf9=(char*)dwp; dwp+=1024;
  tbuf10=(char*)dwp; dwp+=512;
- tbuf_gfvdi=(char*)dwp; dwp+=512;//для GetFileVerDescInfo
+ tbuf_gfvdi=(char*)dwp; dwp+=512;//пїЅпїЅпїЅ GetFileVerDescInfo
  tbExpand=(char*)dwp; //dwp+=512;
  #ifdef _DEBUG
   DWORD_PTR dwpEnd; dwpEnd=dwp; dwpEnd-=(DWORD_PTR)hg2;
@@ -700,7 +711,11 @@ end_load_setts:
  WinChain_End=(DWORD_PTR)hWinChain; WinChain_End+=LocalSize(hWinChain); WinChain_End-=4;
  FillMemory(usrHistStart,4096*3,0x03);//fill user,kernel,commit history
  //// Load Language File & Fill ResourcesAllocationTable
- if(FillResourcesAllocationTable(LngFileName)==0){FailMessage(ReadOfLngFileFailed_txt,0,FMSG_NO_SUCCESSINFO|FMSG_ICONSTOP|FMSG_SHOW_MSGBOX|FMSG_WRITE_LOG); goto exit;}
+ if(FillResourcesAllocationTable(LngFileName)==0){
+  // Use fallback string since language loading failed and ReadOfLngFileFailed_txt is not available
+  FailMessage(ReadOfLngFileFailed_fallback,0,FMSG_NO_SUCCESSINFO|FMSG_ICONSTOP|FMSG_SHOW_MSGBOX|FMSG_WRITE_LOG); 
+  goto exit;
+ }
  LocalFree(LngFileName);
  ErrCode_txt=smemTable->ErrorCode_0x;
  ERROR_txt=smemTable->ERROR_txt;
@@ -710,7 +725,7 @@ end_load_setts:
    bRunOK=1; goto exit;
   }
  }
- //// Снятие программы при drkey
+ //// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ drkey
  if(cmd_Remove){//UnInstall Mode
   HKEY hKey,hKeyCompany;
   if(MessageBox(main_win,smemTable->AYouRemoveCngs,progTitle,MB_YESNO|MB_ICONQUESTION|MB_DEFBUTTON2)==IDYES){
@@ -725,7 +740,7 @@ end_load_setts:
    oat.RootDirectory=hKeyCompany;
    ustr.Buffer=hk_mainW; ustr.Length=getstrlenW(ustr.Buffer);
    #ifdef SETTS_REGKEY_HIDE
-    ustr.Length+=2;//чтобы WinAPI не открыл
+    ustr.Length+=2;//пїЅпїЅпїЅпїЅпїЅ WinAPI пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
    #endif
    if((ErrCode=ntdllFunctions.NtOpenKey((HANDLE*)&hKey,DELETE,&oat))!=0){
     openKey_fails:
