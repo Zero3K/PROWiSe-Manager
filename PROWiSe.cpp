@@ -520,11 +520,46 @@ void Settings_SetDefault_All(){DWORD n,nm;
 
 DWORD iy,iny;
 
+BOOL CheckCriticalDependencies(){
+ // Check for ModernMenu.dll in the same directory
+ char modulePath[MAX_PATH];
+ char dllPath[MAX_PATH];
+ DWORD pathLen = GetModuleFileName(NULL, modulePath, MAX_PATH);
+ if(pathLen == 0) return TRUE; // Can't check, assume OK
+ 
+ // Find last backslash to get directory
+ char* lastSlash = modulePath + pathLen;
+ while(lastSlash > modulePath && *lastSlash != '\\') lastSlash--;
+ if(*lastSlash == '\\') {
+  lstrcpy(dllPath, modulePath);
+  dllPath[lastSlash - modulePath + 1] = 0; // Truncate after backslash
+  lstrcat(dllPath, "ModernMenu.dll");
+  
+  HANDLE hFile = CreateFile(dllPath, 0, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  if(hFile == INVALID_HANDLE_VALUE) {
+   char errMsg[512];
+   lstrcpy(errMsg, "Critical file missing: ModernMenu.dll\n\n");
+   lstrcat(errMsg, "Please ensure ModernMenu.dll is in the same folder as PROWiSe.exe\n\n");
+   lstrcat(errMsg, "If you continue to have problems, see INSTALLATION.md for troubleshooting steps.");
+   MessageBox(NULL, errMsg, "PROWiSe Manager - Missing Dependencies", MB_OK|MB_ICONERROR);
+   return FALSE;
+  }
+  CloseHandle(hFile);
+ }
+ return TRUE;
+}
+
 BOOL EntryPoint_Init(BOOL *runOK){
  OSVERSIONINFO osv; DWORD ErrCode,nm; char *LngFileName; BOOL bRunOK,isFirstRun; int i,in;
  DWORD_PTR dwp; void *lbuf2048;
  LngFileName=0; bRunOK=0;
  gInst=GetModuleHandle(0);
+ 
+ // Check for critical dependencies early
+ if(!CheckCriticalDependencies()) {
+  *runOK = FALSE;
+  return FALSE;
+ }
  /////// Get OS Version
  osv.dwOSVersionInfoSize=sizeof(OSVERSIONINFO);
  if(GetVersionEx(&osv)){
@@ -534,13 +569,14 @@ BOOL EntryPoint_Init(BOOL *runOK){
    if(osv.dwMinorVersion<1)goto win_nt_ver_err;
    if((osv.dwMinorVersion==1 && osv.dwBuildNumber<2600))goto win_nt_ver_err;
   }
+  // Windows Vista+ (6.x) and Windows 10/11 (10.x) are supported
  }
  goto continue_run;
 win_ver_err:
-  MessageBox(main_win,"Windows XP is required !",progTitle,MB_OK|MB_ICONSTOP);
+  MessageBox(main_win,"Windows XP or later is required !",progTitle,MB_OK|MB_ICONSTOP);
   goto exit;
 win_nt_ver_err:
-  if(MessageBox(main_win,"Windows XP is required.\r\rContinue anyway ?",progTitle,MB_YESNO|MB_ICONWARNING|MB_DEFBUTTON2)!=IDYES)goto exit;
+  if(MessageBox(main_win,"Windows XP SP3 is recommended.\r\rContinue anyway ?",progTitle,MB_YESNO|MB_ICONWARNING|MB_DEFBUTTON2)!=IDYES)goto exit;
 continue_run:
  //bRunOK=0;
  nm=sizeof(PROGSETTINGS);

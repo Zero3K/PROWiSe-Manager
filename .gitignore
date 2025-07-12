@@ -1,0 +1,32 @@
+# Build artifacts
+*.obj
+*.lib
+*.exe
+*.dll
+*.res
+*.tds
+*.#*
+*.~*
+
+# Temporary files
+*.tmp
+*.temp
+system_info.txt
+
+# IDE files
+*.dpr
+*.dcu
+*.dfm
+*.ddp
+*.dof
+*.cfg
+*.local
+*.identcache
+*.dproj.local
+
+# Logs
+*.log
+
+# Backup files
+*.bak
+*~
