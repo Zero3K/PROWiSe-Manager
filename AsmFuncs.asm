@@ -1,11 +1,11 @@
 	.586p
-	model flat
+	.model flat
 _TEXT	segment dword public use32 'CODE'
 
 asmIsProcessInJob proc near
  push [esp+8]
  push [esp+8]
- call	 [esp+20]
+ call	 dword ptr [esp+20]
  test	 eax, eax
  jl	 short quit
  checkisjob_:
@@ -18,18 +18,18 @@ asmIsProcessInJob proc near
 asmIsProcessInJob endp
 
 asmGetCurrentProcessId proc near
- mov eax, large fs:18h
+ mov eax, fs:[18h]
  mov eax, [eax+20h]
  retn
 asmGetCurrentProcessId endp
 
 asmGetCurrentPeb proc near
- mov     eax, large fs:18h
+ mov     eax, fs:[18h]
  mov     eax, [eax+30h]
  retn
 asmGetCurrentPeb endp
 
-getstrlen proc near ; выдает длину строки в байтах
+getstrlen proc near ; пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  mov eax,[esp+04h]
  test eax,eax
  jz short _quitA
@@ -44,7 +44,7 @@ getstrlen proc near ; выдает длину строки в байтах
  ret 4
 getstrlen endp
 
-getstrlenW proc near ; выдает длину строки в байтах
+getstrlenW proc near ; пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  mov eax,[esp+04h]
  test eax,eax
  jz short _quitW
@@ -59,7 +59,7 @@ getstrlenW proc near ; выдает длину строки в байтах
  ret 4
 getstrlenW endp
 
-asmMyCreateWindowExW_EndCode proc near     ; при изменении надо контролировать размер в openProperies()
+asmMyCreateWindowExW_EndCode proc near     ; пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ openProperies()
  push eax
  push ebx
  mov ebx,_Enable_SetTop
