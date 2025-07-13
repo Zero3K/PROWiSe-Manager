@@ -12,6 +12,24 @@ typedef struct {
 
 extern NTDLL_FUNCTIONS ntdllFunctions;
 
+// Assembly function declarations
+extern "C" {
+    int getstrlen(const char* str);
+    int getstrlenW(const wchar_t* str);
+    DWORD asmCalcHash32(const char* str);
+    DWORD asmIsProcessInJob(HANDLE hProcess, HANDLE hJob, PVOID lpReserved);
+    DWORD asmGetCurrentProcessId(void);
+    PVOID asmGetCurrentPeb(void);
+}
+
+// C function declarations  
+int copystring(char* dest, const char* src);
+void strappend(char* dest, const char* src);
+LPVOID LocalAllocAndCopy(LPCSTR str);
+void Try_Except_Error(DWORD code);
+void WatchProcesses();
+BOOL CheckCriticalDependencies();
+
 // HTML Help function pointer
 extern HWND (__stdcall *pHtmlHelpA)(HWND, LPCSTR, UINT, DWORD_PTR);
 extern HMODULE hHctrlLib;

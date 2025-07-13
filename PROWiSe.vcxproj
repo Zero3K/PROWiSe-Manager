@@ -120,19 +120,24 @@
     <ClCompile Include="main_win.cpp" />
     <ClCompile Include="Performance.cpp" />
     <ClCompile Include="Processes.cpp" />
+    <ClCompile Include="Processes_BtmPane.cpp" />
     <ClCompile Include="PROWiSe.cpp" />
     <ClCompile Include="procInfo.cpp" />
     <ClCompile Include="resources.cpp" />
+    <ClCompile Include="Run_Dlg.cpp" />
     <ClCompile Include="SaveColumns.cpp" />
     <ClCompile Include="searchFunc.cpp" />
     <ClCompile Include="Services.cpp" />
+    <ClCompile Include="ServicesRemote.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="shutdown.cpp" />
+    <ClCompile Include="SrvcGroups.cpp" />
     <ClCompile Include="StartupRun.cpp" />
     <ClCompile Include="StringF.cpp" />
     <ClCompile Include="WinStyles.cpp" />
     <ClCompile Include="WinTransparency.cpp" />
     <ClCompile Include="Windows.cpp" />
+    <ClCompile Include="WriteDataBin.cpp" />
     <ClCompile Include="handlesInfo.cpp" />
   </ItemGroup>
   <ItemGroup>

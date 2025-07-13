@@ -76,7 +76,16 @@
     <ClCompile Include="Processes.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
+    <ClCompile Include="Processes_BtmPane.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
     <ClCompile Include="Services.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="ServicesRemote.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="SrvcGroups.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
     <ClCompile Include="Drivers.cpp">
@@ -114,6 +123,12 @@
     </ClCompile>
     <ClCompile Include="searchFunc.cpp">
       <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Run_Dlg.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="WriteDataBin.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
