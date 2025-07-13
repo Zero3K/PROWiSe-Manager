@@ -553,6 +553,10 @@ BOOL EntryPoint_Init(BOOL *runOK){
  OSVERSIONINFO osv; DWORD ErrCode,nm; char *LngFileName; BOOL bRunOK,isFirstRun; int i,in;
  DWORD_PTR dwp; void *lbuf2048;
  LngFileName=0; bRunOK=0;
+ 
+ // Initialize NT DLL functions for Visual Studio 2019 compatibility
+ InitializeNtdllFunctions();
+ 
  gInst=GetModuleHandle(0);
  
  // Check for critical dependencies early
