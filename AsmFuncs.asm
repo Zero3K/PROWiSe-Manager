@@ -1,5 +1,5 @@
 	.586p
-	model flat
+	.model flat
 _TEXT	segment dword public use32 'CODE'
 
 asmIsProcessInJob proc near
