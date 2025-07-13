@@ -1,5 +1,5 @@
 	.586p
-	.model flat
+	model flat
 _TEXT	segment dword public use32 'CODE'
 
 asmIsProcessInJob proc near
@@ -18,13 +18,13 @@ asmIsProcessInJob proc near
 asmIsProcessInJob endp
 
 asmGetCurrentProcessId proc near
- mov eax, fs:18h
+ mov eax, fs:[18h]
  mov eax, [eax+20h]
  retn
 asmGetCurrentProcessId endp
 
 asmGetCurrentPeb proc near
- mov     eax, fs:18h
+ mov     eax, fs:[18h]
  mov     eax, [eax+30h]
  retn
 asmGetCurrentPeb endp
