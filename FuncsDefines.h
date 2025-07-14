@@ -12,15 +12,15 @@ typedef struct {
 
 extern NTDLL_FUNCTIONS ntdllFunctions;
 
-// Assembly function declarations
+// Assembly function declarations (using __stdcall to match original assembly)
 extern "C" {
-    int getstrlen(const char* str);
-    int getstrlenW(const wchar_t* str);
-    DWORD asmCalcHash32(const char* str);
-    DWORD asmIsProcessInJob(HANDLE hProcess, HANDLE hJob, PVOID lpReserved);
-    DWORD asmGetCurrentProcessId(void);
-    PVOID asmGetCurrentPeb(void);
-    void asmMyCreateWindowExW_EndCode(void);
+    int __stdcall getstrlen(const char* str);
+    int __stdcall getstrlenW(const wchar_t* str);
+    DWORD __cdecl asmCalcHash32(const char* str);
+    DWORD __stdcall asmIsProcessInJob(HANDLE hProcess, HANDLE hJob, PVOID lpReserved);
+    DWORD __cdecl asmGetCurrentProcessId(void);
+    PVOID __cdecl asmGetCurrentPeb(void);
+    void __stdcall asmMyCreateWindowExW_EndCode(void);
 }
 
 // C function declarations  

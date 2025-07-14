@@ -8,7 +8,7 @@
 DWORD _Enable_SetTop = 0; // Define the variable that was extern in assembly
 
 // String length function for ANSI strings (replacement for getstrlen)
-extern "C" int getstrlen(const char* str)
+extern "C" int __stdcall getstrlen(const char* str)
 {
     if (!str) return 0;
     
@@ -20,7 +20,7 @@ extern "C" int getstrlen(const char* str)
 }
 
 // String length function for Unicode strings (replacement for getstrlenW)
-extern "C" int getstrlenW(const wchar_t* str)
+extern "C" int __stdcall getstrlenW(const wchar_t* str)
 {
     if (!str) return 0;
     
@@ -32,41 +32,44 @@ extern "C" int getstrlenW(const wchar_t* str)
 }
 
 // 32-bit hash calculation (replacement for asmCalcHash32)
-extern "C" DWORD asmCalcHash32(const char* str)
+extern "C" DWORD __cdecl asmCalcHash32(const char* str)
 {
     if (!str) return 0;
     
-    const char* ptr = str;
+    const unsigned char* ptr = (const unsigned char*)str;
     DWORD hash_by_bytes = 0;
-    DWORD len = 0;
+    DWORD length = 0;
     
-    // First pass: get first DWORD and calculate hash by bytes
-    DWORD hash = *(DWORD*)ptr;  // Load first 4 bytes
+    // Load first 4 bytes as hash (like assembly: mov eax,[esi])
+    DWORD hash = *(DWORD*)ptr;
     
+    // First pass: calculate hash by bytes and get length
     while (*ptr) {
-        hash = _rotr(hash, 7);  // Rotate right by 7 bits
-        hash_by_bytes ^= hash;   // XOR with running hash_by_bytes
-        ptr++;
-        len++;
+        hash = _rotr(hash, 7);        // ror eax,7
+        hash_by_bytes ^= hash;        // xor [esp],eax
+        ptr++;                        // lodsb (increment ptr)
+        length++;                     // inc edi
     }
     
-    // Second pass: add hash by dwords
-    ptr = str;
-    hash = len;  // Start with string length
+    // Second pass: hash by dwords (starting fresh from string)
+    ptr = (const unsigned char*)str;
+    hash = length;                    // mov eax,edi (start with string length)
     
-    // Add complete DWORDs
-    while (ptr + 4 <= str + len) {
-        hash += *(DWORD*)ptr;
-        ptr += 4;
+    // Calculate end address for last 4 bytes (sub edi,5; add edi,esi)
+    const unsigned char* end_ptr = ptr + length - 4;
+    
+    // Add dwords while ptr < end_ptr
+    while (ptr < end_ptr) {
+        hash += *(DWORD*)ptr;         // add eax,[esi]
+        ptr += 4;                     // add esi,4
     }
     
-    // Add the last DWORD (may overlap with previous)
-    // This approximates the assembly behavior
-    if (len >= 4) {
-        hash += *(DWORD*)(str + len - 4);
+    // Add the last 4 bytes (add eax,[edi])
+    if (length >= 4) {
+        hash += *(DWORD*)end_ptr;
     }
     
-    // XOR the two hashes
+    // Final XOR: hash_by_bytes XOR hash_by_dwords
     return hash ^ hash_by_bytes;
 }
 
@@ -98,7 +101,7 @@ extern "C" PVOID asmGetCurrentPeb(void)
 }
 
 // Process job check (replacement for asmIsProcessInJob)
-extern "C" DWORD asmIsProcessInJob(HANDLE hProcess, HANDLE hJob, PVOID lpReserved)
+extern "C" DWORD __stdcall asmIsProcessInJob(HANDLE hProcess, HANDLE hJob, PVOID lpReserved)
 {
     // Call the NT function passed in lpReserved (which should be NtIsProcessInJob)
     typedef NTSTATUS (WINAPI *NtIsProcessInJobFunc)(HANDLE, HANDLE, PBOOLEAN);
@@ -110,16 +113,16 @@ extern "C" DWORD asmIsProcessInJob(HANDLE hProcess, HANDLE hJob, PVOID lpReserve
     
     NTSTATUS status = ntFunc(hProcess, hJob, &isInJob);
     
-    if (status < 0) return status; // Return error code if failed
+    if (status < 0) return status; // Return error code if failed (jl short quit)
     
-    // Check if result is 0x123 (special value from original assembly)
-    if (status == 0x123) return 1;
-    return isInJob ? 1 : 0;
+    // Assembly logic: xor ecx,ecx; cmp eax,0123h; setnz cl; mov eax,ecx
+    // This means: return 1 if status is NOT 0x123, otherwise return 0
+    return (status != 0x123) ? 1 : 0;
 }
 
 // Window creation hook code (replacement for asmMyCreateWindowExW_EndCode)
 // This function needs to be compiled as raw machine code for injection
-extern "C" void asmMyCreateWindowExW_EndCode()
+extern "C" void __stdcall asmMyCreateWindowExW_EndCode()
 {
     // This function is used for binary injection and needs to be implemented
     // as inline assembly to maintain the exact machine code structure
@@ -140,7 +143,7 @@ extern "C" void asmMyCreateWindowExW_EndCode()
         push ebx                // cx
         push 0FFFFFFFFh         // HWND_TOPMOST
         push eax                // hwnd
-        mov eax, 0BAADDEADh     // Placeholder for SetWindowPos address
+        mov eax, 0BAADDEADh     // Placeholder for SetWindowPos address (corrected)
         call eax
     _quitAsmSetTop:
         pop ebx
