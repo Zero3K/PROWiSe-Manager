@@ -37,17 +37,15 @@ extern "C" DWORD asmCalcHash32(const char* str)
     if (!str) return 0;
     
     const char* ptr = str;
-    DWORD hash = 0;
     DWORD hash_by_bytes = 0;
     DWORD len = 0;
     
-    // First pass: calculate hash by bytes and get length
-    DWORD first_dword = *(DWORD*)ptr;
-    hash = first_dword;
+    // First pass: get first DWORD and calculate hash by bytes
+    DWORD hash = *(DWORD*)ptr;  // Load first 4 bytes
     
     while (*ptr) {
         hash = _rotr(hash, 7);  // Rotate right by 7 bits
-        hash_by_bytes ^= hash;
+        hash_by_bytes ^= hash;   // XOR with running hash_by_bytes
         ptr++;
         len++;
     }
@@ -56,13 +54,14 @@ extern "C" DWORD asmCalcHash32(const char* str)
     ptr = str;
     hash = len;  // Start with string length
     
-    // Add DWORDs until near the end
-    while (ptr + 4 <= str + len - 4) {
+    // Add complete DWORDs
+    while (ptr + 4 <= str + len) {
         hash += *(DWORD*)ptr;
         ptr += 4;
     }
     
-    // Add last 4 bytes
+    // Add the last DWORD (may overlap with previous)
+    // This approximates the assembly behavior
     if (len >= 4) {
         hash += *(DWORD*)(str + len - 4);
     }
