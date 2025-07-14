@@ -130,6 +130,9 @@
     <ClCompile Include="WriteDataBin.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="AsmFuncs.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Variables.h">
@@ -162,14 +165,6 @@
     <ClInclude Include="crc32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <MASM Include="AsmFuncs.asm">
-      <Filter>Assembly Files</Filter>
-    </MASM>
-    <MASM Include="myFuncs.asm">
-      <Filter>Assembly Files</Filter>
-    </MASM>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PROWiSe_Rc.rc">

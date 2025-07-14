@@ -20,6 +20,7 @@ extern "C" {
     DWORD asmIsProcessInJob(HANDLE hProcess, HANDLE hJob, PVOID lpReserved);
     DWORD asmGetCurrentProcessId(void);
     PVOID asmGetCurrentPeb(void);
+    void asmMyCreateWindowExW_EndCode(void);
 }
 
 // C function declarations  
