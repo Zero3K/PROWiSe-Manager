@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <intrin.h>
+#include <stdlib.h>
 
 // Global variables referenced by assembly code
 DWORD _Enable_SetTop = 0; // Define the variable that was extern in assembly
@@ -40,7 +41,7 @@ extern "C" DWORD __cdecl asmCalcHash32(const char* str)
     DWORD hash_by_bytes = 0;
     DWORD length = 0;
     
-    // Load first 4 bytes as hash (like assembly: mov eax,[esi])
+    // Load first 4 bytes as initial hash (mov eax,[esi])
     DWORD hash = *(DWORD*)ptr;
     
     // First pass: calculate hash by bytes and get length
@@ -51,22 +52,24 @@ extern "C" DWORD __cdecl asmCalcHash32(const char* str)
         length++;                     // inc edi
     }
     
-    // Second pass: hash by dwords (starting fresh from string)
+    // Second pass: hash by dwords
+    // Reset to string start: mov esi,dword ptr [esp+4+8+4]
     ptr = (const unsigned char*)str;
     hash = length;                    // mov eax,edi (start with string length)
     
-    // Calculate end address for last 4 bytes (sub edi,5; add edi,esi)
-    const unsigned char* end_ptr = ptr + length - 4;
+    // Calculate last dword address: sub edi,5; add edi,esi
+    // This means: last_4byte_addr = string_start + (length - 5)
+    const unsigned char* last_dword_addr = ptr + (length - 5);
     
-    // Add dwords while ptr < end_ptr
-    while (ptr < end_ptr) {
+    // Add dwords while ptr < last_dword_addr
+    while (ptr < last_dword_addr) {
         hash += *(DWORD*)ptr;         // add eax,[esi]
         ptr += 4;                     // add esi,4
     }
     
-    // Add the last 4 bytes (add eax,[edi])
-    if (length >= 4) {
-        hash += *(DWORD*)end_ptr;
+    // Add the last 4 bytes: add eax,[edi]
+    if (length >= 5) {  // Only if we have at least 5 bytes
+        hash += *(DWORD*)last_dword_addr;
     }
     
     // Final XOR: hash_by_bytes XOR hash_by_dwords
@@ -74,7 +77,7 @@ extern "C" DWORD __cdecl asmCalcHash32(const char* str)
 }
 
 // Get current process ID from TEB (replacement for asmGetCurrentProcessId)
-extern "C" DWORD asmGetCurrentProcessId(void)
+extern "C" DWORD __stdcall asmGetCurrentProcessId(void)
 {
     // Access TEB (Thread Environment Block) at fs:[0x18], then get PID at offset 0x20
 #ifdef _M_IX86
@@ -87,7 +90,7 @@ extern "C" DWORD asmGetCurrentProcessId(void)
 }
 
 // Get Process Environment Block from TEB (replacement for asmGetCurrentPeb)
-extern "C" PVOID asmGetCurrentPeb(void)
+extern "C" PVOID __stdcall asmGetCurrentPeb(void)
 {
     // Access TEB at fs:[0x18], then get PEB at offset 0x30
 #ifdef _M_IX86
@@ -148,7 +151,7 @@ extern "C" void __stdcall asmMyCreateWindowExW_EndCode()
     _quitAsmSetTop:
         pop ebx
         pop eax
-        ret 030h                // Return and clean up stack (0x30 = 48 bytes)
+        // Note: Stack cleanup handled by __stdcall convention
     }
 #else
     // For non-x86 architectures, this injection method won't work
