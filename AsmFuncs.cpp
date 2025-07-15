@@ -4,6 +4,12 @@
 #include <windows.h>
 #include <intrin.h>
 #include <stdlib.h>
+#include "NTstruct.h"  // For PEB and other NT structures
+
+// Ensure _rotr is available for older compilers
+#ifndef _rotr
+#define _rotr(value, shift) (((value) >> (shift)) | ((value) << (32 - (shift))))
+#endif
 
 // Global variables referenced by assembly code
 DWORD _Enable_SetTop = 0; // Define the variable that was extern in assembly
@@ -37,43 +43,52 @@ extern "C" DWORD __cdecl asmCalcHash32(const char* str)
 {
     if (!str) return 0;
     
-    const unsigned char* ptr = (const unsigned char*)str;
+    const unsigned char* esi = (const unsigned char*)str;
     DWORD hash_by_bytes = 0;
-    DWORD length = 0;
+    DWORD edi = 0;  // string length counter
     
-    // Load first 4 bytes as initial hash (mov eax,[esi])
-    DWORD hash = *(DWORD*)ptr;
+    // Load first 4 bytes as initial hash: mov eax,[esi]
+    DWORD eax = *(DWORD*)esi;
+    
+    // Push 0 to make space for hash_by_bytes on stack: push eax (where eax=0)
+    // hash_by_bytes serves as [esp] in the assembly
     
     // First pass: calculate hash by bytes and get length
-    while (*ptr) {
-        hash = _rotr(hash, 7);        // ror eax,7
-        hash_by_bytes ^= hash;        // xor [esp],eax
-        ptr++;                        // lodsb (increment ptr)
-        length++;                     // inc edi
-    }
+    // _CalcHash32 loop
+    do {
+        eax = _rotr(eax, 7);           // ror eax,7
+        hash_by_bytes ^= eax;          // xor [esp],eax
+        unsigned char al = *esi++;     // lodsb (load byte and increment)
+        edi++;                         // inc edi (increment length counter)
+    } while (edi > 0 && *(esi-1) != 0); // test al,al; jnz _CalcHash32
     
-    // Second pass: hash by dwords
-    // Reset to string start: mov esi,dword ptr [esp+4+8+4]
-    ptr = (const unsigned char*)str;
-    hash = length;                    // mov eax,edi (start with string length)
+    // Adjust edi to actual string length (excluding null terminator)
+    edi--;
+    
+    // Reset esi to string start: mov esi,dword ptr [esp+4+8+4]
+    esi = (const unsigned char*)str;
+    
+    // Start with string length: mov eax,edi
+    eax = edi;
     
     // Calculate last dword address: sub edi,5; add edi,esi
-    // This means: last_4byte_addr = string_start + (length - 5)
-    const unsigned char* last_dword_addr = ptr + (length - 5);
+    const unsigned char* end_ptr = esi + (edi >= 5 ? edi - 5 : 0);
     
-    // Add dwords while ptr < last_dword_addr
-    while (ptr < last_dword_addr) {
-        hash += *(DWORD*)ptr;         // add eax,[esi]
-        ptr += 4;                     // add esi,4
+    // Second pass: hash by dwords
+    // _AddDword32 loop
+    while (esi < end_ptr) {
+        eax += *(DWORD*)esi;      // add eax,[esi]
+        esi += 4;                 // add esi,4
     }
     
-    // Add the last 4 bytes: add eax,[edi]
-    if (length >= 5) {  // Only if we have at least 5 bytes
-        hash += *(DWORD*)last_dword_addr;
+    // Add last 4 bytes: add eax,[edi]
+    if (edi >= 5) {
+        eax += *(DWORD*)end_ptr;
     }
     
-    // Final XOR: hash_by_bytes XOR hash_by_dwords
-    return hash ^ hash_by_bytes;
+    // Final XOR: pop edi; xor eax,edi
+    // edi now contains hash_by_bytes
+    return eax ^ hash_by_bytes;
 }
 
 // Get current process ID from TEB (replacement for asmGetCurrentProcessId)
@@ -90,16 +105,16 @@ extern "C" DWORD __stdcall asmGetCurrentProcessId(void)
 }
 
 // Get Process Environment Block from TEB (replacement for asmGetCurrentPeb)
-extern "C" PVOID __stdcall asmGetCurrentPeb(void)
+extern "C" PEB* __stdcall asmGetCurrentPeb(void)
 {
     // Access TEB at fs:[0x18], then get PEB at offset 0x30
 #ifdef _M_IX86
     DWORD* teb = (DWORD*)__readfsdword(0x18);
-    return *(PVOID*)((BYTE*)teb + 0x30);
+    return (PEB*)*(PVOID*)((BYTE*)teb + 0x30);
 #else
     // For non-x86, we need to use alternate method
     // This is a simplified fallback - in real scenario might need more complex handling
-    return (PVOID)0; // Placeholder - would need proper PEB access for 64-bit
+    return (PEB*)0; // Placeholder - would need proper PEB access for 64-bit
 #endif
 }
 
@@ -146,12 +161,12 @@ extern "C" void __stdcall asmMyCreateWindowExW_EndCode()
         push ebx                // cx
         push 0FFFFFFFFh         // HWND_TOPMOST
         push eax                // hwnd
-        mov eax, 0BAADDEADh     // Placeholder for SetWindowPos address (corrected)
+        mov eax, 0BAADDEADh     // Placeholder for SetWindowPos address
         call eax
     _quitAsmSetTop:
         pop ebx
         pop eax
-        // Note: Stack cleanup handled by __stdcall convention
+        // __stdcall automatically cleans up stack parameters (0x30 bytes = 12*4 = 48 bytes)
     }
 #else
     // For non-x86 architectures, this injection method won't work

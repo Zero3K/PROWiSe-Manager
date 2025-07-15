@@ -70,7 +70,7 @@ extern "C" {
     DWORD __cdecl asmCalcHash32(const char* str);
     DWORD __stdcall asmIsProcessInJob(HANDLE hProcess, HANDLE hJob, PVOID lpReserved);
     DWORD __stdcall asmGetCurrentProcessId(void);
-    PVOID __stdcall asmGetCurrentPeb(void);
+    PEB* __stdcall asmGetCurrentPeb(void);
     void __stdcall asmMyCreateWindowExW_EndCode(void);
 }
 
