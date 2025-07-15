@@ -55,6 +55,7 @@ extern WORD user32HASHTable[];
 // User32 functions structure (if used)
 typedef struct {
     // Add user32 function pointers as needed
+    HWND (WINAPI *CreateWindowExW)(DWORD, LPCWSTR, LPCWSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID);
     PVOID placeholder;
 } USER32_FUNCTIONS;
 
