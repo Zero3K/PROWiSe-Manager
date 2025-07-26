@@ -1,42 +1,3 @@
-#ifndef NTSTRUCT_H
-#define NTSTRUCT_H
-
-#include <windows.h>
-
-// Basic NT data types and structures
-#ifndef NTSTATUS
-typedef LONG NTSTATUS;
-#endif
-
-#ifndef UNICODE_STRING
-typedef struct _UNICODE_STRING {
-    USHORT Length;
-    USHORT MaximumLength;
-    PWSTR  Buffer;
-} UNICODE_STRING, *PUNICODE_STRING;
-#endif
-
-#ifndef OBJECT_ATTRIBUTES
-typedef struct _OBJECT_ATTRIBUTES {
-    ULONG           uLength;
-    HANDLE          hRootDirectory;
-    PUNICODE_STRING pObjectName;
-    ULONG           uAttributes;
-    PVOID           pSecurityDescriptor;
-    PVOID           pSecurityQualityOfService;
-} OBJECT_ATTRIBUTES, *POBJECT_ATTRIBUTES;
-#endif
-
-#ifndef IO_STATUS_BLOCK
-typedef struct _IO_STATUS_BLOCK {
-    union {
-        NTSTATUS Status;
-        PVOID    Pointer;
-    };
-    ULONG_PTR Information;
-} IO_STATUS_BLOCK, *PIO_STATUS_BLOCK;
-#endif
-
 #define MAXIMUM_FILENAME_LENGTH 256
 #define DUPLICATE_CLOSE_SOURCE      0x00000001
 #define DUPLICATE_SAME_ATTRIBUTES   0x00000004
@@ -79,7 +40,7 @@ typedef struct _IO_STATUS_BLOCK {
 #define SYMBOLIC_LINK_QUERY	       	0x0001
 #define SYMBOLIC_LINK_ALL_ACCESS       	(STANDARD_RIGHTS_REQUIRED | 0x1)
 
-// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ NtCreateFile/NtOpenFile
+// Информация, возвращаемая NtCreateFile/NtOpenFile
 #define FILE_SUPERSEDED                 0x00000000
 #define FILE_OPENED                     0x00000001
 #define FILE_CREATED                    0x00000002
@@ -698,8 +659,6 @@ PVOID StackCommitMax;
 PVOID StackReserved;
 } INITIAL_TEB, *PINITIAL_TEB;
 
-#ifndef _THREAD_INFORMATION_CLASS_DEFINED
-#define _THREAD_INFORMATION_CLASS_DEFINED
 typedef enum _THREAD_INFORMATION_CLASS {
  ThreadBasicInformation,
  ThreadTimes,
@@ -720,7 +679,6 @@ typedef enum _THREAD_INFORMATION_CLASS {
  ThreadIsIoPending,
  ThreadHideFromDebugger
 } THREAD_INFORMATION_CLASS, *PTHREAD_INFORMATION_CLASS;
-#endif
 
 typedef enum _FILE_INFORMATION_CLASS {
  FileDirectoryInformation=1,
@@ -1032,6 +990,4 @@ VOID
 #define STATUS_OBJECT_PATH_INVALID       0xC0000039
 #define STATUS_OBJECT_PATH_NOT_FOUND     0xC000003A
 #define STATUS_OBJECT_PATH_SYNTAX_BAD    0xC000003B
-
-#endif // NTSTRUCT_H
 

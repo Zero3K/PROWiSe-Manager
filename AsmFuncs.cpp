@@ -4,7 +4,22 @@
 #include <windows.h>
 #include <intrin.h>
 #include <stdlib.h>
-#include "NTstruct.h"  // For PEB and other NT structures
+
+// Forward declaration for PEB structure (simplified for our needs)
+typedef struct _PEB {
+    BYTE Reserved1[2];
+    BYTE BeingDebugged;
+    BYTE Reserved2[1];
+    PVOID Reserved3[2];
+    struct _PEB_LDR_DATA* Ldr;
+    struct _RTL_USER_PROCESS_PARAMETERS* ProcessParameters;
+    BYTE Reserved4[104];
+    PVOID Reserved5[52];
+    struct _PS_POST_PROCESS_INIT_ROUTINE* PostProcessInitRoutine;
+    BYTE Reserved6[128];
+    PVOID Reserved7[1];
+    ULONG SessionId;
+} PEB, *PPEB;
 
 // Ensure _rotr is available for older compilers
 #ifndef _rotr
@@ -105,16 +120,16 @@ extern "C" DWORD __stdcall asmGetCurrentProcessId(void)
 }
 
 // Get Process Environment Block from TEB (replacement for asmGetCurrentPeb)
-extern "C" PEB* __stdcall asmGetCurrentPeb(void)
+extern "C" PVOID __stdcall asmGetCurrentPeb(void)
 {
     // Access TEB at fs:[0x18], then get PEB at offset 0x30
 #ifdef _M_IX86
     DWORD* teb = (DWORD*)__readfsdword(0x18);
-    return (PEB*)*(PVOID*)((BYTE*)teb + 0x30);
+    return (PVOID)*(PVOID*)((BYTE*)teb + 0x30);
 #else
     // For non-x86, we need to use alternate method
     // This is a simplified fallback - in real scenario might need more complex handling
-    return (PEB*)0; // Placeholder - would need proper PEB access for 64-bit
+    return (PVOID)0; // Placeholder - would need proper PEB access for 64-bit
 #endif
 }
 

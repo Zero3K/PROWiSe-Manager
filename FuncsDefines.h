@@ -3,7 +3,6 @@
 
 // Function definitions and declarations
 #include <windows.h>
-#include "NTstruct.h"
 
 // NT Status codes
 #ifndef STATUS_SUCCESS
@@ -71,7 +70,7 @@ extern "C" {
     DWORD __cdecl asmCalcHash32(const char* str);
     DWORD __stdcall asmIsProcessInJob(HANDLE hProcess, HANDLE hJob, PVOID lpReserved);
     DWORD __stdcall asmGetCurrentProcessId(void);
-    PEB* __stdcall asmGetCurrentPeb(void);
+    PVOID __stdcall asmGetCurrentPeb(void);
     void __stdcall asmMyCreateWindowExW_EndCode(void);
 }
 
