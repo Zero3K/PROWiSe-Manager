@@ -100,7 +100,7 @@ devenv PROWiSe.sln /build "Release|Win32"
 
 ### C++ Language Standard
 - **C++14** (`stdcpp14`) - Default standard for Visual Studio 2019
-- **ConformanceMode enabled** - Ensures strict C++ standard compliance
+- **ConformanceMode disabled** - Maintains compatibility with legacy code patterns
 
 ### Warning Level
 - Level 3 with SDL checks disabled for compatibility
@@ -123,9 +123,9 @@ The project includes Windows resource files:
 
 The project has been updated to compile with Visual Studio 2019's default C++ standard:
 
-1. **ConformanceMode enabled**: Project now uses strict C++ standard compliance
-2. **C++14 Language Standard**: Explicitly set to match VS2019 default
-3. **Variable Scoping Fixed**: Resolved C++ scoping issues in About.cpp
+1. **C++14 Language Standard**: Explicitly set to match VS2019 default
+2. **Variable Scoping Fixed**: Resolved C++ scoping issues in About.cpp that prevented compilation
+3. **Legacy Code Compatibility**: ConformanceMode kept disabled to maintain compatibility with existing codebase
 
 ## Known Issues and Limitations
 
