@@ -1,32 +1,14 @@
 // AsmFuncs.cpp - C++ replacements for assembly functions
 // This file replaces the assembly implementations in AsmFuncs.asm and myFuncs.asm
 
-#include <windows.h>
-#include <intrin.h>
-#include <stdlib.h>
-
-// Forward declaration for PEB structure (simplified for our needs)
-typedef struct _PEB {
-    BYTE Reserved1[2];
-    BYTE BeingDebugged;
-    BYTE Reserved2[1];
-    PVOID Reserved3[2];
-    struct _PEB_LDR_DATA* Ldr;
-    struct _RTL_USER_PROCESS_PARAMETERS* ProcessParameters;
-    BYTE Reserved4[104];
-    PVOID Reserved5[52];
-    struct _PS_POST_PROCESS_INIT_ROUTINE* PostProcessInitRoutine;
-    BYTE Reserved6[128];
-    PVOID Reserved7[1];
-    ULONG SessionId;
-} PEB, *PPEB;
+// Note: This file is included in PROWiSe.cpp, so we don't include headers here
 
 // Ensure _rotr is available for older compilers
 #ifndef _rotr
 #define _rotr(value, shift) (((value) >> (shift)) | ((value) << (32 - (shift))))
 #endif
 
-// Global variables referenced by assembly code
+// Global variables referenced by assembly code (defined in Variables.h)
 DWORD _Enable_SetTop = 0; // Define the variable that was extern in assembly
 
 // String length function for ANSI strings (replacement for getstrlen)

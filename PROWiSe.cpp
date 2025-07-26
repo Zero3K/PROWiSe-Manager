@@ -44,6 +44,7 @@
 #include "FuncsDefines.h"
 
 #include "StringF.cpp"// ������� ��� ������ �� ��������
+#include "AsmFuncs.cpp"// C++ replacements for assembly functions
 #include "HeadFuncs.cpp"
 #include "Errors_Logs.cpp"
 #include "HookCreateWindow.cpp"

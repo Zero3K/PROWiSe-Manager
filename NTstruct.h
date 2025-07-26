@@ -1,6 +1,3 @@
-#ifndef NTSTRUCT_H
-#define NTSTRUCT_H
-
 #define MAXIMUM_FILENAME_LENGTH 256
 #define DUPLICATE_CLOSE_SOURCE      0x00000001
 #define DUPLICATE_SAME_ATTRIBUTES   0x00000004
@@ -14,6 +11,34 @@
 //#define FILE_READ_ATTRIBUTES 0x0080
 
 #define HANDLEFLAG_PROTECT_FROM_CLOSE 0x01
+
+// Only define these structures if not already defined by Windows headers
+#ifndef _NTDEF_
+
+// Forward declarations
+typedef struct _OBJECT_ATTRIBUTES OBJECT_ATTRIBUTES, *POBJECT_ATTRIBUTES;
+
+#ifndef _UNICODE_STRING_DEFINED
+#define _UNICODE_STRING_DEFINED
+// UNICODE_STRING structure
+typedef struct _UNICODE_STRING {
+    USHORT Length;
+    USHORT MaximumLength;
+    PWSTR  Buffer;
+} UNICODE_STRING, *PUNICODE_STRING;
+#endif
+
+// OBJECT_ATTRIBUTES structure
+typedef struct _OBJECT_ATTRIBUTES {
+    ULONG uLength;
+    HANDLE hRootDirectory;
+    PUNICODE_STRING pObjectName;
+    ULONG uAttributes;
+    PVOID pSecurityDescriptor;
+    PVOID pSecurityQualityOfService;
+} OBJECT_ATTRIBUTES, *POBJECT_ATTRIBUTES;
+
+#endif // _NTDEF_
 
 #define InitializeObjectAttributes( p, n, a, r, s ) {   \
     (p)->uLength = sizeof( OBJECT_ATTRIBUTES );          \
@@ -993,6 +1018,4 @@ VOID
 #define STATUS_OBJECT_PATH_INVALID       0xC0000039
 #define STATUS_OBJECT_PATH_NOT_FOUND     0xC000003A
 #define STATUS_OBJECT_PATH_SYNTAX_BAD    0xC000003B
-
-#endif // NTSTRUCT_H
 

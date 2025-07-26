@@ -11,12 +11,14 @@
 #define STATUS_INFO_LENGTH_MISMATCH ((NTSTATUS)0xC0000004L)
 #endif
 
-// NT data types
+// NT data types (only define if not already defined)
+#ifndef _NTDEF_
 #ifndef NTSTATUS
 typedef LONG NTSTATUS;
 #endif
 #ifndef PBOOLEAN
 typedef BOOLEAN* PBOOLEAN;
+#endif
 #endif
 
 // NT DLL functions structure
