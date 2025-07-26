@@ -204,7 +204,7 @@ BitBlt(mdc,167-2,97-2,72+8,72+8,ndc,0,0,SRCCOPY);
 DeleteObject(hbmp);
 ///// coding start
 //"\xA9 Dmitry Komarov\x0ARussia, Nizhny Tagil\x0\x0"
-/*char cpo[]="\xA9 Дмитрий Комаров\x0\x0"; BYTE cod1,cod2; DWORD n;
+/*char cpo[]="\xA9 пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ\x0\x0"; BYTE cod1,cod2; DWORD n;
 char towr[10], bfx[4];
 HANDLE File=CreateFile("code.txt",GENERIC_WRITE,0,0,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
 SetFilePointer(File,0,NULL,FILE_BEGIN);
@@ -219,11 +219,10 @@ CloseHandle(File); */
 ///// coding end
 //if(tOptions.lng==0){for(i=0;i<sizeof(devlpr)-1;i+=2){cprits[i]=(char)((devlpr[i+1]^0xFE)+5); cprits[i+1]=(char)((devlpr[i]^0xFD)+0x10);}cprits[56]=0;cprits[57]=(char)(sizeof(devlpr)-2);}
 //else {for(i=0;i<sizeof(devlpr2)-1;i+=2){cprits[i]=(char)((devlpr2[i+1]^0xFE)+5); cprits[i+1]=(char)((devlpr2[i]^0xFD)+0x10);} cprits[sizeof(devlpr2)-2]=0; cprits[57]=(char)(sizeof(devlpr2)-2);}
-int i;
 LONG enctxtlen; unsigned char *penctxt;
 if(ActiveLangID==RUS_LANGID){enctxtlen=sizeof(Rdevlpr); penctxt=(unsigned char*)Rdevlpr;}
 else {enctxtlen=sizeof(devlpr);penctxt=(unsigned char*)devlpr;}
-for(i=0;i<enctxtlen-1;i+=2){cprits[i]=(char)((penctxt[i+1]^0xFE)+5); cprits[i+1]=(char)((penctxt[i]^0xFD)+0x10);}cprits[56]=0;cprits[57]=(char)(enctxtlen-2);
+for(int i=0;i<enctxtlen-1;i+=2){cprits[i]=(char)((penctxt[i+1]^0xFE)+5); cprits[i+1]=(char)((penctxt[i]^0xFD)+0x10);}cprits[56]=0;cprits[57]=(char)(enctxtlen-2);
 ft.lfCharSet=RUSSIAN_CHARSET; ft.lfOrientation=0; ft.lfEscapement=0;
 lstrcpy(ft.lfFaceName,TimesNewRoman_txt);
 ft.lfHeight=37; ft.lfWidth=16; ft.lfWeight=500;
