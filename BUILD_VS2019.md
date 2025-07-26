@@ -98,6 +98,10 @@ devenv PROWiSe.sln /build "Release|Win32"
 - Debug: Multi-threaded Debug (`/MTd`)
 - Release: Multi-threaded (`/MT`)
 
+### C++ Language Standard
+- **C++14** (`stdcpp14`) - Default standard for Visual Studio 2019
+- **ConformanceMode enabled** - Ensures strict C++ standard compliance
+
 ### Warning Level
 - Level 3 with SDL checks disabled for compatibility
 
@@ -114,6 +118,14 @@ Assembly functions are properly declared in `FuncsDefines.h` with C linkage.
 The project includes Windows resource files:
 - `PROWiSe_Rc.rc` - Main application resources
 - `Job Dialog.rc` - Job dialog resources
+
+## Recent Updates (C++ Standard Compliance)
+
+The project has been updated to compile with Visual Studio 2019's default C++ standard:
+
+1. **ConformanceMode enabled**: Project now uses strict C++ standard compliance
+2. **C++14 Language Standard**: Explicitly set to match VS2019 default
+3. **Variable Scoping Fixed**: Resolved C++ scoping issues in About.cpp
 
 ## Known Issues and Limitations
 
