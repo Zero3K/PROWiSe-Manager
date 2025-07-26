@@ -1,3 +1,6 @@
+#ifndef NTSTRUCT_H
+#define NTSTRUCT_H
+
 #define MAXIMUM_FILENAME_LENGTH 256
 #define DUPLICATE_CLOSE_SOURCE      0x00000001
 #define DUPLICATE_SAME_ATTRIBUTES   0x00000004
@@ -40,7 +43,7 @@
 #define SYMBOLIC_LINK_QUERY	       	0x0001
 #define SYMBOLIC_LINK_ALL_ACCESS       	(STANDARD_RIGHTS_REQUIRED | 0x1)
 
-// Информация, возвращаемая NtCreateFile/NtOpenFile
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ NtCreateFile/NtOpenFile
 #define FILE_SUPERSEDED                 0x00000000
 #define FILE_OPENED                     0x00000001
 #define FILE_CREATED                    0x00000002
@@ -990,4 +993,6 @@ VOID
 #define STATUS_OBJECT_PATH_INVALID       0xC0000039
 #define STATUS_OBJECT_PATH_NOT_FOUND     0xC000003A
 #define STATUS_OBJECT_PATH_SYNTAX_BAD    0xC000003B
+
+#endif // NTSTRUCT_H
 

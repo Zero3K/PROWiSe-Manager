@@ -2,7 +2,6 @@
 #define HEADERSTRUCTS_H
 
 // Header structures for the application
-#include <windows.h>
 
 // Forward declarations and basic structures
 typedef struct {

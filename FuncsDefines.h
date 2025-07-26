@@ -2,7 +2,6 @@
 #define FUNCSDEFINES_H
 
 // Function definitions and declarations
-#include <windows.h>
 
 // NT Status codes
 #ifndef STATUS_SUCCESS
