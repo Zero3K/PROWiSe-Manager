@@ -34,10 +34,10 @@
 #include <lmcons.h>
 #include <WinCred.h>
 
-#include "..\htmlhlp.h"
+// #include "..\htmlhlp.h"  // HTML Help functions are loaded dynamically
 #include "Definitions.h"
 #include "crc32.h"
-#include "..\NTstruct.h"
+#include "NTstruct.h"
 #include "TextStrings.h"
 #include "HeaderStructs.h"
 #include "Variables.h"
