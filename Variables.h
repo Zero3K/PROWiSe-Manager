@@ -1,6 +1,9 @@
 ////////////////////////////////////// VARIABLES DECLARATION /////////////////////////////////
 VERTICAL_GRAPH_DATA vdCpu,vdCommit; OSCIL_GRAPH_DATA gdCpu,gdCommit,gdCpuKrnl; OSCILGRAPH_DATA mainperf_ogdCpu,mainperf_ogdMem;
 HINSTANCE gInst,hThemeLib=0;
+
+// Global variables for assembly function compatibility
+extern DWORD _Enable_SetTop;
 HWND run_win,main_win,strtrun_win,hstatus,processes_win,abt_win,services_win,windows_win,sysi_win,drvi_win,hndls_win=0,settings_win=0;
 HWND hProcessList=0,hModuleList=0,hHandleList=0,StRunList=0,WindowsList=0,DrvList=0,hdnList=0;
 HWND *hWinChain; DWORD WinChain_End;
@@ -84,9 +87,9 @@ int Prcclnumber[PRCCOLUMNS_COUNT];
 "CPU Time",//9
 "Command Line",//10
 "Handles",//11
-"VM Size",//12 //VM Size //Вирт. память
+"VM Size",//12 //VM Size //пїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ
 "Private bytes",//13 //Pagefile Usage
-"Working Set",//14 //Working Set //Физ. память
+"Working Set",//14 //Working Set //пїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ
 "Commit Charge",//15
 "Description",//16
 "Version",//17

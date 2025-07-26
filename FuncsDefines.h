@@ -7,7 +7,26 @@
 // NT DLL functions structure
 typedef struct {
     ULONG (*RtlGetLastWin32Error)(void);
-    // Add other NT functions as needed
+    LONG (*pNtQuerySystemInformation)(ULONG, PVOID, ULONG, PULONG);
+    LONG (*pNtQueryInformationProcess)(HANDLE, ULONG, PVOID, ULONG, PULONG);
+    LONG (*pNtQueryInformationThread)(HANDLE, ULONG, PVOID, ULONG, PULONG);
+    LONG (*pNtQueryObject)(HANDLE, ULONG, PVOID, ULONG, PULONG);
+    LONG (*pNtQueryInformationFile)(HANDLE, PVOID, PVOID, ULONG, ULONG);
+    LONG (*pNtTerminateProcess)(HANDLE, LONG);
+    LONG (*pNtOpenThread)(HANDLE*, ACCESS_MASK, PVOID, PVOID);
+    LONG (*pNtShutdownSystem)(ULONG);
+    LONG (*pNtInitiatePowerAction)(ULONG, ULONG, ULONG, UCHAR);
+    LONG (*NtIsProcessInJob)(HANDLE, HANDLE, UCHAR*);
+    LONG (*NtCreateKey)(HANDLE*, ACCESS_MASK, PVOID, ULONG, PVOID, ULONG, PULONG);
+    LONG (*NtOpenKey)(HANDLE*, ACCESS_MASK, PVOID);
+    LONG (*NtDeleteKey)(HANDLE);
+    LONG (*NtClose)(HANDLE);
+    LONG (*NtOpenFile)(HANDLE*, ACCESS_MASK, PVOID, PVOID, ULONG, ULONG);
+    LONG (*NtQueryDirectoryFile)(HANDLE, HANDLE, PVOID, PVOID, PVOID, PVOID, ULONG, ULONG, UCHAR, PVOID, UCHAR);
+    LONG (*NtCreateJobObject)(HANDLE*, ACCESS_MASK, PVOID);
+    ULONG (*RtlNtStatusToDosError)(LONG);
+    LONG (*RtlUnicodeStringToAnsiString)(PVOID, PVOID, UCHAR);
+    LONG (*RtlAnsiStringToUnicodeString)(PVOID, PVOID, UCHAR);
 } NTDLL_FUNCTIONS;
 
 extern NTDLL_FUNCTIONS ntdllFunctions;

@@ -34,16 +34,17 @@
 #include <lmcons.h>
 #include <WinCred.h>
 
-#include "..\htmlhlp.h"
+// #include "..\htmlhlp.h"  // HTML Help functions are loaded dynamically
 #include "Definitions.h"
 #include "crc32.h"
-#include "..\NTstruct.h"
+#include "NTstruct.h"
 #include "TextStrings.h"
 #include "HeaderStructs.h"
 #include "Variables.h"
 #include "FuncsDefines.h"
 
 #include "StringF.cpp"// ������� ��� ������ �� ��������
+#include "AsmFuncs.cpp"// C++ replacements for assembly functions
 #include "HeadFuncs.cpp"
 #include "Errors_Logs.cpp"
 #include "HookCreateWindow.cpp"

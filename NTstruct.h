@@ -1,3 +1,6 @@
+#ifndef _NTSTRUCT_H_
+#define _NTSTRUCT_H_
+
 #define MAXIMUM_FILENAME_LENGTH 256
 #define DUPLICATE_CLOSE_SOURCE      0x00000001
 #define DUPLICATE_SAME_ATTRIBUTES   0x00000004
@@ -12,14 +15,8 @@
 
 #define HANDLEFLAG_PROTECT_FROM_CLOSE 0x01
 
-#define InitializeObjectAttributes( p, n, a, r, s ) {   \
-    (p)->uLength = sizeof( OBJECT_ATTRIBUTES );          \
-    (p)->hRootDirectory = r;                             \
-    (p)->uAttributes = a;                                \
-    (p)->pObjectName = n;                                \
-    (p)->pSecurityDescriptor = s;                        \
-    (p)->pSecurityQualityOfService = NULL;               \
-}
+// Note: InitializeObjectAttributes macro removed as OBJECT_ATTRIBUTES is not defined
+// and this macro was not used in the codebase
 
 #define OBJ_INHERIT	     	0x00000002
 #define OBJ_PERMANENT	     	0x00000010
@@ -40,7 +37,7 @@
 #define SYMBOLIC_LINK_QUERY	       	0x0001
 #define SYMBOLIC_LINK_ALL_ACCESS       	(STANDARD_RIGHTS_REQUIRED | 0x1)
 
-// Информация, возвращаемая NtCreateFile/NtOpenFile
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ NtCreateFile/NtOpenFile
 #define FILE_SUPERSEDED                 0x00000000
 #define FILE_OPENED                     0x00000001
 #define FILE_CREATED                    0x00000002
@@ -991,3 +988,4 @@ VOID
 #define STATUS_OBJECT_PATH_NOT_FOUND     0xC000003A
 #define STATUS_OBJECT_PATH_SYNTAX_BAD    0xC000003B
 
+#endif // _NTSTRUCT_H_
