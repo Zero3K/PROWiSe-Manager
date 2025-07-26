@@ -1,3 +1,6 @@
+#ifndef _NTSTRUCT_H_
+#define _NTSTRUCT_H_
+
 #define MAXIMUM_FILENAME_LENGTH 256
 #define DUPLICATE_CLOSE_SOURCE      0x00000001
 #define DUPLICATE_SAME_ATTRIBUTES   0x00000004
@@ -12,42 +15,8 @@
 
 #define HANDLEFLAG_PROTECT_FROM_CLOSE 0x01
 
-// Only define these structures if not already defined by Windows headers
-#ifndef _NTDEF_
-
-// Forward declarations
-typedef struct _OBJECT_ATTRIBUTES OBJECT_ATTRIBUTES, *POBJECT_ATTRIBUTES;
-
-#ifndef _UNICODE_STRING_DEFINED
-#define _UNICODE_STRING_DEFINED
-// UNICODE_STRING structure
-typedef struct _UNICODE_STRING {
-    USHORT Length;
-    USHORT MaximumLength;
-    PWSTR  Buffer;
-} UNICODE_STRING, *PUNICODE_STRING;
-#endif
-
-// OBJECT_ATTRIBUTES structure
-typedef struct _OBJECT_ATTRIBUTES {
-    ULONG uLength;
-    HANDLE hRootDirectory;
-    PUNICODE_STRING pObjectName;
-    ULONG uAttributes;
-    PVOID pSecurityDescriptor;
-    PVOID pSecurityQualityOfService;
-} OBJECT_ATTRIBUTES, *POBJECT_ATTRIBUTES;
-
-#endif // _NTDEF_
-
-#define InitializeObjectAttributes( p, n, a, r, s ) {   \
-    (p)->uLength = sizeof( OBJECT_ATTRIBUTES );          \
-    (p)->hRootDirectory = r;                             \
-    (p)->uAttributes = a;                                \
-    (p)->pObjectName = n;                                \
-    (p)->pSecurityDescriptor = s;                        \
-    (p)->pSecurityQualityOfService = NULL;               \
-}
+// Note: InitializeObjectAttributes macro removed as OBJECT_ATTRIBUTES is not defined
+// and this macro was not used in the codebase
 
 #define OBJ_INHERIT	     	0x00000002
 #define OBJ_PERMANENT	     	0x00000010
@@ -1019,3 +988,4 @@ VOID
 #define STATUS_OBJECT_PATH_NOT_FOUND     0xC000003A
 #define STATUS_OBJECT_PATH_SYNTAX_BAD    0xC000003B
 
+#endif // _NTSTRUCT_H_

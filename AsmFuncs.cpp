@@ -119,14 +119,14 @@ extern "C" PVOID __stdcall asmGetCurrentPeb(void)
 extern "C" DWORD __stdcall asmIsProcessInJob(HANDLE hProcess, HANDLE hJob, PVOID lpReserved)
 {
     // Call the NT function passed in lpReserved (which should be NtIsProcessInJob)
-    typedef NTSTATUS (WINAPI *NtIsProcessInJobFunc)(HANDLE, HANDLE, PBOOLEAN);
+    typedef LONG (WINAPI *NtIsProcessInJobFunc)(HANDLE, HANDLE, UCHAR*);
     
     if (!lpReserved) return 0;
     
     NtIsProcessInJobFunc ntFunc = (NtIsProcessInJobFunc)lpReserved;
-    BOOLEAN isInJob = FALSE;
+    UCHAR isInJob = 0;
     
-    NTSTATUS status = ntFunc(hProcess, hJob, &isInJob);
+    LONG status = ntFunc(hProcess, hJob, &isInJob);
     
     if (status < 0) return status; // Return error code if failed (jl short quit)
     
